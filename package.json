@@ -1,0 +1,18 @@
+{
+  "name": "x-gs",
+  "version": "0.0.1",
+  "private": true,
+  "description": "An HTTP-driven game server for a GM:S game",
+  "license": "UNLICENSED",
+  "author": "Alexander Rozhok <mizzdev@gmail.com>",
+  "dependencies": {
+    "bluebird": "^3.5.0",
+    "body-parser": "^1.17.2",
+    "express": "^4.15.3",
+    "log4js": "^2.3.1",
+    "mongoose": "^4.11.4",
+    "mongoose-auto-increment": "^5.0.1",
+    "mongoose-timestamp": "^0.6.0",
+    "pm2-intercom": "^1.0.0"
+  }
+}
