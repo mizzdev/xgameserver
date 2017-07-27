@@ -13,7 +13,8 @@ exports.create = function(req, res) {
     .tap((account) => logger.info(`[ID ${account.id}]`, 'registered', account.nickname))
     .then((account) => res.json(account))
     .catch((err) => {
-      logger.error(err);
+      logger.error(err.message);
+      logger.error(req.body);
       res.status(500).send(err.message);
     });
 };
@@ -28,7 +29,8 @@ exports.read = function(req, res) {
       return res.json(account);
     })
     .catch((err) => {
-      logger.error(err);
+      logger.error(err.message);
+      logger.error(req.body);
       res.status(500).send(err.message);
     });
 };
@@ -51,7 +53,8 @@ exports.update = function(req, res) {
         .then((account) => res.json(account));
     })
     .catch((err) => {
-      logger.error(err);
+      logger.error(err.message);
+      logger.error(req.body);
       res.status(500).send(err.message);
     });
 };
