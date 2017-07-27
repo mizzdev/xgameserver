@@ -30,3 +30,8 @@ app.listen(env('PORT'));
 db.init(env('MONGO_URL'));
 
 serviceRegistry.provideRouter(app);
+serviceRegistry.addService(require('./services/accounts'));
+
+app.use('*', (req, res) => {
+  res.status(404).send('Endpoint Not Found');
+});
