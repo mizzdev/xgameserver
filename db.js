@@ -3,6 +3,7 @@
 const Promise = require('bluebird');
 const log4js = require('log4js');
 const mongoose = require('mongoose');
+const autoIncrement = require('mongoose-auto-increment');
 
 const logger = log4js.getLogger('db');
 logger.level = 'debug';
@@ -19,4 +20,6 @@ exports.init = function(mongoUrl) {
   })
     .then(() => logger.info('MONGODB:', 'Connected!'))
     .catch((err) => logger.error('MONGODB:', err.message));
+
+  autoIncrement.initialize(mongoose.connection);
 };
