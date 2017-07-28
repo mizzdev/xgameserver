@@ -8,7 +8,7 @@ const checkAuth = require('./middlewares/checkAuth');
 
 router.get('/:id', checkAuth, accountsController.read);
 router.put('/:id', checkAuth, accountsController.update);
-router.post('/', checkAuth, accountsController.create);
+router.post('/', accountsController.create);
 
 exports.name = 'accounts';
 exports.router = router;
