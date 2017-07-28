@@ -2,6 +2,7 @@
 
 const log4js = require('log4js');
 const Account = require('../models/account');
+const serviceRegistry = require('../../registry');
 
 const logger = log4js.getLogger('accounts');
 
@@ -11,7 +12,19 @@ exports.create = function(req, res) {
   const account = new Account(req.body);
   account.save()
     .tap((account) => logger.info(`[ID ${account.id}]`, 'registered', account.nickname))
-    .then((account) => res.json(account))
+    .then((account) => {
+      const authService = serviceRegistry.getService('auth');
+
+      authService.getKeyById(account.id)
+        .then((key) => {
+          logger.debug(`[ID ${account.id}]`, 'account key:', key);
+
+          const accountData = account.toObject();
+          accountData.key = key;
+
+          res.json(accountData);
+        });
+    })
     .catch((err) => {
       logger.error(err.message);
       logger.error(req.body);
