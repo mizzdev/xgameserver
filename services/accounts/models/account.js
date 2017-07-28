@@ -9,7 +9,9 @@ const accountSchema = new mongoose.Schema({
   exp: { type: Number, default: 0 },
   bp: { type: Number, default: 0 },
   balanceGold: { type: Number, default: 0 },
-  balanceGems: { type: Number, default: 0 }
+  balanceGems: { type: Number, default: 0 },
+  userEmail: String,
+  userPassword: String
 });
 
 accountSchema.plugin(autoIncrement.plugin, {
