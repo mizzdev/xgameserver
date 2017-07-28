@@ -3,7 +3,9 @@
 const crypto = require('crypto');
 const Promise = require('bluebird');
 const log4js = require('log4js');
+
 const config = require('./config');
+const AuthNonce = require('./models/auth-nonce');
 
 const logger = log4js.getLogger('auth');
 
@@ -51,6 +53,17 @@ function checkSignature(payload, signature) {
     });
 }
 
+function checkNonce(payload) {
+  return AuthNonce.findOne({ id: payload.id, nonce: payload.time })
+    .then((authNonce) => {
+      if (authNonce) {
+        throw new Error('Such Authorization payload has been already used');
+      }
+
+      return new AuthNonce({ id: payload.id, nonce: payload.time }).save();
+    });
+}
+
 const api = {};
 
 api.verify = function(headers) {
@@ -67,7 +80,9 @@ api.verify = function(headers) {
         throw new Error('Invalid authorization scheme');
       }
 
-      return checkSignature(authData.payload, authData.signature);
+      return Promise.resolve()
+        .then(() => checkNonce(authData.payload))
+        .then(() => checkSignature(authData.payload, authData.signature));
     })
     .catch((err) => {
       logger.error(err.message);
