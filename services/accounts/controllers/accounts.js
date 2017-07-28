@@ -55,6 +55,16 @@ exports.update = function(req, res) {
         return res.status(404).send('Account Not Found');
       }
 
+      if (req.body.userEmail) {
+        if (account.userEmail) {
+          return res.status(400).send('Email Already Assigned');
+        }
+
+        if (!req.body.userPassword) {
+          return res.status(400).send('Email Must Be Provided With Password');
+        }
+      }
+
       logger.info(`[ID ${account.id}]`, 'before update:', account);
 
       Object.keys(req.body).forEach((key) => {
