@@ -1,4 +1,5 @@
 {
   "PORT": 7777,
-  "MONGO_URL": "mongodb://localhost/x-gs"
+  "MONGO_URL": "mongodb://localhost/x-gs",
+  "NO_AUTHORIZATION": false
 }

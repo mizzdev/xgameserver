@@ -4,6 +4,7 @@ const crypto = require('crypto');
 const Promise = require('bluebird');
 const log4js = require('log4js');
 
+const env = require('../../env');
 const config = require('./config');
 const AuthNonce = require('./models/auth-nonce');
 
@@ -67,6 +68,10 @@ function checkNonce(payload) {
 const api = {};
 
 api.verify = function(headers) {
+  if (env('NO_AUTHORIZATION')) {
+    return Promise.resolve();
+  }
+
   return Promise.resolve()
     .then(() => {
       if (!headers.authorization || !headers.authorization.length) {
