@@ -10,13 +10,45 @@ const logger = log4js.getLogger('auth');
 logger.level = 'debug';
 
 function parseAuthHeader(authorization) {
-  const splitString = authorization.split(' ');
+  const splitHeader = authorization.split(' ');
 
-  if (splitString.length !== 2) {
+  if (splitHeader.length !== 2) {
     throw new Error('Cannot parse Authorization header');
   }
 
-  return { scheme: splitString[0], signature: splitString[1] };
+  const scheme = splitHeader[0];
+  const params = splitHeader[1];
+
+  const splitParams = params.split('.');
+
+  if (splitParams.length !== 2) {
+    throw new Error('Cannot parse Authorization header params');
+  }
+
+  let payload;
+
+  try {
+    payload = JSON.parse(new Buffer(splitParams[0], 'base64').toString('utf8'));
+  } catch (err) {
+    throw new Error(`Cannot parse Authorization header payload: ${err.message}`);
+  }
+
+  return { scheme, payload, signature: splitParams[1] };
+}
+
+function checkSignature(payload, signature) {
+  return api.getKeyById(payload.id)
+    .then((key) => {
+      const hash = crypto.createHash('sha1');
+
+      hash.update(`${payload.id}${key}${payload.time}`);
+      return new Buffer(hash.digest('hex')).toString('base64');
+    })
+    .then((digest) => {
+      if (signature != digest) {
+        throw new Error('Invalid signature');
+      }
+    });
 }
 
 const api = {};
@@ -34,6 +66,8 @@ api.verify = function(headers) {
       if (authData.scheme !== config['AUTH_SCHEME']) {
         throw new Error('Invalid authorization scheme');
       }
+
+      return checkSignature(authData.payload, authData.signature);
     })
     .catch((err) => {
       logger.error(err.message);
