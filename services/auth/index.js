@@ -1,5 +1,6 @@
 'use string';
 
+const crypto = require('crypto');
 const Promise = require('bluebird');
 const log4js = require('log4js');
 const config = require('./config');
@@ -37,6 +38,16 @@ api.verify = function(headers) {
     .catch((err) => {
       logger.error(err.message);
       throw err;
+    });
+};
+
+api.getKeyById = function(accountId) {
+  return Promise.resolve()
+    .then(() => {
+      const hash = crypto.createHash('sha1');
+
+      hash.update(`${accountId}{config["APP_SECRET"]}`);
+      return new Buffer(hash.digest('hex')).toString('base64');
     });
 };
 
