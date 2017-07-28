@@ -1,11 +1,11 @@
-'use string';
+'use strict';
 
 const crypto = require('crypto');
 const Promise = require('bluebird');
 const log4js = require('log4js');
 
 const env = require('../../env');
-const config = require('./config');
+const config = require('./config.json');
 const AuthNonce = require('./models/auth-nonce');
 
 const logger = log4js.getLogger('auth');
@@ -48,7 +48,7 @@ function checkSignature(payload, signature) {
       return new Buffer(hash.digest('hex')).toString('base64');
     })
     .then((digest) => {
-      if (signature != digest) {
+      if (signature !== digest) {
         throw new Error('Invalid signature');
       }
     });
