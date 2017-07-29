@@ -35,8 +35,6 @@ class MessageBuffer {
     should(n).be.a.Number();
     should(n).be.greaterThan(-1);
 
-    console.log(n);
-
     if (!n) {
       return [];
     }
@@ -63,6 +61,7 @@ class Room {
   }
 
   readMessages(last) {
+    console.log(this.msgCounter, last);
     this.readsCounter++;
     return this._msgBuffer.pull(this.msgCounter - last - 1);
   }
