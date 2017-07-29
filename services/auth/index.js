@@ -11,7 +11,7 @@ const AuthNonce = require('./models/auth-nonce');
 
 const logger = log4js.getLogger('auth');
 
-logger.level = 'debug';
+logger.level = 'error';
 
 function parseAuthHeader(authorization) {
   const splitHeader = authorization.split(' ');
