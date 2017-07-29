@@ -44,6 +44,10 @@ exports.resolve = function(roomName) {
   return room;
 };
 
+exports.getRoom = function(roomName) {
+  return roomList.find((room) => (room.name === roomName));
+};
+
 exports.getRoomList = function() {
   return roomList;
 };

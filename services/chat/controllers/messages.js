@@ -4,8 +4,12 @@ const roomManager = require('../room-manager');
 
 exports.getList = function(req, res) {
   const last  = Number(req.query.last) || -1;
-  const room = roomManager.resolve(req.params.roomName);
+  const room = roomManager.getRoom(req.params.roomName);
   const messageList = room.readMessages(last);
+
+  if (!room) {
+    return res.status(404).send('Room Not Found');
+  }
 
   res.json({
     messages: messageList.map((message) => JSON.stringify(message)),
@@ -15,7 +19,12 @@ exports.getList = function(req, res) {
 
 exports.send = function(req, res) {
   const last  = Number(req.query.last) || -1;
-  const room = roomManager.resolve(req.params.roomName);
+  const room = roomManager.getRoom(req.params.roomName);
+
+  if (!room) {
+    return res.status(404).send('Room Not Found');
+  }
+
   room.sendMessage(req.body);
 
   const messageList = room.readMessages(last);
