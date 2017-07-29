@@ -1,0 +1,12 @@
+extends ./layout
+
+block content
+  .page-header
+    h1 #[i.fa.fa-comments] Chat
+    p.lead Currently created chat rooms:
+  .row
+    each room in rooms
+      .col-sm-4
+        .alert.alert-success
+          strong.pull-right #[i.fa.fa-male] #{room.players}
+          p= room.name

@@ -17,4 +17,4 @@ router.put('/:id', checkIdentity, accountFieldWhitelist, accountsController.upda
 
 exports.name = 'accounts';
 exports.router = router;
-exports.serviceInterface = {};
+exports.serviceInterface = require('./api');

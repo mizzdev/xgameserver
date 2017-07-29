@@ -14,3 +14,4 @@ router.post('/:roomName', messagesController.send);
 
 exports.name = 'chat';
 exports.router = router;
+exports.serviceInterface = require('./api');
