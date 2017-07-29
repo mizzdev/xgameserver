@@ -64,12 +64,13 @@ api.verify = function(headers) {
       should(authData.payload).have.property('time');
 
       if (env('AUTH_IGNORE_SIGNATURE')) {
-        return Promise.resolve();
+        return Number(authData.payload.id);
       }
 
       return Promise.resolve()
         .then(() => checkNonce(authData.payload))
-        .then(() => checkSignature(authData.payload, authData.signature));
+        .then(() => checkSignature(authData.payload, authData.signature))
+        .then(() => Number(authData.payload.id));
     })
     .catch((err) => {
       logger.error(err.message);
