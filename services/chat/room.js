@@ -33,7 +33,7 @@ class MessageBuffer {
 
   pull(n) {
     should(n).be.a.Number();
-    should(n).be.greaterThan(0);
+    should(n).be.greaterThan(-1);
 
     const nMax = Math.min(n, this._capacity);
     return this._buffer.slice(-nMax);
@@ -58,7 +58,7 @@ class Room {
 
   readMessages(last) {
     this.readsCounter++;
-    return this._msgBuffer.pull(this.msgCounter - last);
+    return this._msgBuffer.pull(this.msgCounter - last - 1);
   }
 
   update() {

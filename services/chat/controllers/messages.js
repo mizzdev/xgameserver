@@ -14,7 +14,7 @@ exports.getList = function(req, res) {
 
   res.json({
     messages: messageList.map((message) => JSON.stringify(message)),
-    last: room.msgCounter
+    last: room.msgCounter - 1
   });
 };
 
@@ -32,6 +32,6 @@ exports.send = function(req, res) {
 
   res.json({
     messages: messageList.map((message) => JSON.stringify(message)),
-    last: room.msgCounter
+    last: room.msgCounter - 1
   });
 };
