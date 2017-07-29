@@ -2,6 +2,7 @@
 
 const crypto = require('crypto');
 const Promise = require('bluebird');
+const should = require('should/as-function');
 const log4js = require('log4js');
 
 const env = require('../../env');
@@ -14,27 +15,16 @@ logger.level = 'debug';
 
 function parseAuthHeader(authorization) {
   const splitHeader = authorization.split(' ');
-
-  if (splitHeader.length !== 2) {
-    throw new Error('Cannot parse Authorization header');
-  }
+  should(splitHeader).have.length(2, 'Cannot parse Authorization header');
 
   const scheme = splitHeader[0];
   const params = splitHeader[1];
 
   const splitParams = params.split('.');
-
-  if (splitParams.length !== 2) {
-    throw new Error('Cannot parse Authorization header params');
-  }
+  should(splitParams).have.length(2, 'Cannot parse Authorization header params');
 
   let payload;
-
-  try {
-    payload = JSON.parse(new Buffer(splitParams[0], 'base64').toString('utf8'));
-  } catch (err) {
-    throw new Error(`Cannot parse Authorization header payload: ${err.message}`);
-  }
+  payload = JSON.parse(new Buffer(splitParams[0], 'base64').toString('utf8'));
 
   return { scheme, payload, signature: splitParams[1] };
 }
@@ -47,20 +37,13 @@ function checkSignature(payload, signature) {
       hash.update(`${payload.id}${key}${payload.time}`);
       return new Buffer(hash.digest('hex')).toString('base64');
     })
-    .then((digest) => {
-      if (signature !== digest) {
-        throw new Error('Invalid signature');
-      }
-    });
+    .then((digest) => should(signature).be.equal(digest, 'Invalid signature'));
 }
 
 function checkNonce(payload) {
   return AuthNonce.findOne({ id: payload.id, nonce: payload.time })
     .then((authNonce) => {
-      if (authNonce) {
-        throw new Error('Such Authorization payload has been already used');
-      }
-
+      should.not.exist(authNonce, 'Such Authorization payload has been already used');
       return new AuthNonce({ id: payload.id, nonce: payload.time }).save();
     });
 }
@@ -70,16 +53,15 @@ const api = {};
 api.verify = function(headers) {
   return Promise.resolve()
     .then(() => {
-      if (!headers.authorization || !headers.authorization.length) {
-        throw new Error('Missing Authorization header');
-      }
+      should(headers).have.property('authorization');
+      should(headers.authorization).not.be.empty();
 
       const authData = parseAuthHeader(headers.authorization);
       logger.debug(authData);
 
-      if (authData.scheme !== config['AUTH_SCHEME']) {
-        throw new Error('Invalid authorization scheme');
-      }
+      should(authData.scheme).be.equal(config['AUTH_SCHEME'], 'Invalid authorization scheme');
+      should(authData.payload).have.property('id');
+      should(authData.payload).have.property('time');
 
       if (env('AUTH_IGNORE_SIGNATURE')) {
         return Promise.resolve();
