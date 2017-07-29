@@ -8,7 +8,7 @@ function getAll(req, res) {
 
 function getAuto(req, res) {
   const langRule = config['CHAT_LANG_RULES'][req.query.lang];
-  const label = langRule || config('CHAT_LANG_DEFAULT');
+  const label = langRule || config['CHAT_LANG_DEFAULT'];
 
   res.json([ label + '1' ]);
 }
