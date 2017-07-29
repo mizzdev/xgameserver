@@ -61,7 +61,6 @@ class Room {
   }
 
   readMessages(last) {
-    console.log(this.msgCounter, last);
     this.readsCounter++;
     return this._msgBuffer.pull(this.msgCounter - last - 1);
   }

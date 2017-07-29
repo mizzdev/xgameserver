@@ -19,7 +19,6 @@ exports.getList = function(req, res) {
 };
 
 exports.send = function(req, res) {
-  const last  = Number(req.query.last) || 0;
   const room = roomManager.getRoom(req.params.roomName);
 
   if (!room) {
