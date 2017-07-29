@@ -1,0 +1,20 @@
+extends ./layout
+
+block content
+  .page-header.text-center
+    h1 Authorized Personnel Only
+  .row
+    .col-sm-6.col-sm-offset-3
+      form.form-horizontal(action=rootPath+'/login' method='POST')
+        fieldset
+          .form-group.row
+            label.col-lg-2.control-label(for='inputUsername') Username
+            .col-lg-10
+              input#inputEmail.form-control(placeholder='Username', type='text' name='username')
+          .form-group.row
+            label.col-lg-2.control-label(for='inputPassword') Password
+            .col-lg-10
+              input#inputPassword.form-control(placeholder='Password', type='password' name='password')
+          .form-group.row
+            .col-lg-8.col-lg-offset-2
+              button.btn.btn-primary.btn-block(type='submit') Submit
