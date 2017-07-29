@@ -1,0 +1,177 @@
+{
+	"variables": [],
+	"info": {
+		"name": "X-GS",
+		"_postman_id": "edddff31-d6f2-ce2a-9cb0-5a3888f0bd1b",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Accounts",
+			"description": "",
+			"item": [
+				{
+					"name": "Register a new player",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"var data = JSON.parse(responseBody);",
+									"var payload = btoa(JSON.stringify({ id: data.id, time: Date.now() }));",
+									"",
+									"postman.setEnvironmentVariable(\"xgs_id\", data.id);",
+									"postman.setEnvironmentVariable(\"xgs_auth\", payload + '.' + payload);"
+								]
+							}
+						}
+					],
+					"request": {
+						"url": "http://{{xgs_url}}:{{xgs_port}}/accounts",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"nickname\": \"buddy\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Get player data by id",
+					"request": {
+						"url": "http://{{xgs_url}}:{{xgs_port}}/accounts/{{xgs_id}}",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							},
+							{
+								"key": "Authorization",
+								"value": "XGS {{xgs_auth}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"nickname\": \"ZALUPA\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Modify player data by id",
+					"request": {
+						"url": "http://{{xgs_url}}:{{xgs_port}}/accounts/{{xgs_id}}",
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							},
+							{
+								"key": "Authorization",
+								"value": "XGS {{xgs_auth}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"nickname\": \"foobar\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Chat",
+			"description": "",
+			"item": [
+				{
+					"name": "Get all chat rooms",
+					"request": {
+						"url": "http://{{xgs_url}}:{{xgs_port}}/chat",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							},
+							{
+								"key": "Authorization",
+								"value": "XGS {{xgs_auth}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"nickname\": \"ZALUPA\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Get a chat room according to language",
+					"request": {
+						"url": {
+							"raw": "http://{{xgs_url}}:{{xgs_port}}/chat?lang={{xgs_lang}}",
+							"protocol": "http",
+							"host": [
+								"{{xgs_url}}"
+							],
+							"port": "{{xgs_port}}",
+							"path": [
+								"chat"
+							],
+							"query": [
+								{
+									"key": "lang",
+									"value": "{{xgs_lang}}",
+									"equals": true,
+									"description": ""
+								}
+							],
+							"variable": []
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							},
+							{
+								"key": "Authorization",
+								"value": "XGS {{xgs_auth}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"nickname\": \"ZALUPA\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
