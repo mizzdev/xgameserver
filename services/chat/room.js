@@ -35,6 +35,8 @@ class MessageBuffer {
     should(n).be.a.Number();
     should(n).be.greaterThan(-1);
 
+    console.log(n);
+
     if (!n) {
       return [];
     }
