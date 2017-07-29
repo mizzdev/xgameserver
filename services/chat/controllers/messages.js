@@ -27,11 +27,5 @@ exports.send = function(req, res) {
   }
 
   room.sendMessage(req.body);
-
-  const messageList = room.readMessages(last);
-
-  res.json({
-    messages: messageList.map((message) => JSON.stringify(message)),
-    last: room.msgCounter - 1
-  });
+  res.json({});
 };
