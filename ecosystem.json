@@ -3,7 +3,7 @@
     "name": "x-gs",
     "script": "server.js",
     "env_noauth": {
-      "NO_AUTHORIZATION": "true"
+      "AUTH_IGNORE_SIGNATURE": true
     }
   }]
 }

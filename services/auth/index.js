@@ -68,10 +68,6 @@ function checkNonce(payload) {
 const api = {};
 
 api.verify = function(headers) {
-  if (env('NO_AUTHORIZATION')) {
-    return Promise.resolve();
-  }
-
   return Promise.resolve()
     .then(() => {
       if (!headers.authorization || !headers.authorization.length) {
@@ -83,6 +79,10 @@ api.verify = function(headers) {
 
       if (authData.scheme !== config['AUTH_SCHEME']) {
         throw new Error('Invalid authorization scheme');
+      }
+
+      if (env('AUTH_IGNORE_SIGNATURE')) {
+        return Promise.resolve();
       }
 
       return Promise.resolve()
