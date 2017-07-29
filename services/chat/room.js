@@ -35,6 +35,10 @@ class MessageBuffer {
     should(n).be.a.Number();
     should(n).be.greaterThan(-1);
 
+    if (!n) {
+      return [];
+    }
+
     const nMax = Math.min(n, this._capacity);
     return this._buffer.slice(-nMax);
   }
