@@ -19,7 +19,7 @@ exports.create = function(req, res) {
         .then((key) => {
           logger.debug(`[ID ${account.id}]`, 'account key:', key);
 
-          const accountData = account.toObject();
+          const accountData = JSON.parse(account.toJSON());
           accountData.key = key;
 
           res.json(accountData);
