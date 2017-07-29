@@ -9,8 +9,8 @@ function getPlayers(room) {
 
 function getAll(req, res) {
   const roomList = roomManager.getRoomList();
-  const result = {};
 
+  const result = {};
   roomList.forEach((room) => {
     result[room.name] = getPlayers(room);
   });
@@ -23,6 +23,7 @@ function getAuto(req, res) {
   const roomName = langRule || config['CHAT_LANG_DEFAULT'];
 
   const room = roomManager.resolve(roomName);
+
   const result = {};
   result[room.name] = getPlayers(room);
 

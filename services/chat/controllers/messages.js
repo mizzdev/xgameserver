@@ -3,7 +3,14 @@
 const roomManager = require('../room-manager');
 
 exports.getList = function(req, res) {
-  const last  = Number(req.query.last) || 0;
+  let last;
+
+  if (typeof req.query.last === 'undefined') {
+    last = -1;
+  } else {
+    last = Number(req.query.last);
+  }
+
   const room = roomManager.getRoom(req.params.roomName);
 
   if (!room) {
