@@ -1,16 +1,32 @@
 'use strict';
 
+const roomManager = require('../room-manager');
 const config = require('../config.json');
 
+function getPlayers(room) {
+  return room.readsPerSecond*config['CHAT_ROOM_UPDATE_RATE'];
+}
+
 function getAll(req, res) {
-  res.json([ 'english1', 'english2', 'english3' ]);
+  const roomList = roomManager.getRoomList();
+  const result = {};
+
+  roomList.forEach((room) => {
+    result[room.name] = getPlayers(room);
+  });
+
+  res.json(result);
 }
 
 function getAuto(req, res) {
   const langRule = config['CHAT_LANG_RULES'][req.query.lang];
-  const label = langRule || config['CHAT_LANG_DEFAULT'];
+  const roomName = langRule || config['CHAT_LANG_DEFAULT'];
 
-  res.json([ label + '1' ]);
+  const room = roomManager.resolve(roomName);
+  const result = {};
+  result[room.name] = getPlayers(room);
+
+  res.json(result);
 }
 
 exports.getList = function(req, res) {

@@ -2,5 +2,7 @@
   "CHAT_LANG_RULES": {
     "en": "english"
   },
-  "CHAT_LANG_DEFAULT": "english"
+  "CHAT_LANG_DEFAULT": "english",
+  "CHAT_ROOM_CAPACITY": 20,
+  "CHAT_ROOM_UPDATE_RATE": 1000
 }
