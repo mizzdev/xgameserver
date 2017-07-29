@@ -14,7 +14,8 @@ DashboardUser.count()
 
     const user = new DashboardUser({
       username: config['DASHBOARD_DEFAULT_USERNAME'],
-      password: config['DASHBOARD_DEFAULT_PASSWORD']
+      password: config['DASHBOARD_DEFAULT_PASSWORD'],
+      defaultCredentials: true
     });
 
     return user.save()

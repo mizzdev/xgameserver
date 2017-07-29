@@ -1,0 +1,31 @@
+extends ./layout
+
+block content
+  .page-header.text-center
+    h1 Profile
+  .row
+    .col-sm-8.col-sm-offset-2
+      form.form-horizontal(action=rootPath+'/profile' method='POST')
+        fieldset
+          legend Password change
+          .form-group.row
+            label.col-lg-3.control-label(for='oldPassword') Old password
+            .col-lg-9
+              input#oldPassword.form-control(placeholder='Old password', type='password' name='passwordOld')
+          .form-group.row
+            label.col-lg-3.control-label(for='newPassword') New password
+            .col-lg-9
+              input#newPassword.form-control(placeholder='New password', type='password' name='passwordNew')
+          .form-group.row
+            label.col-lg-3.control-label(for='repeatPassword') Repeat password
+            .col-lg-9
+              input#repeatPassword.form-control(placeholder='Repeat password', type='password' name='passwordRepeat')
+          .form-group.row
+            .col-lg-9.col-lg-offset-3
+              if error
+                .alert.alert-dismissible.alert-danger
+                  button.close(type='button', data-dismiss='alert') ×
+                  p= error
+              button.btn.btn-primary.btn-block(type='submit')
+                i.fa.fa-edit
+                span  Submit

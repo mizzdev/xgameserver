@@ -32,4 +32,6 @@ router.get('/', (req, res) => {
   res.render('home');
 });
 
+router.use('/profile', require('./profile'));
+
 module.exports = router;
