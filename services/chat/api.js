@@ -10,7 +10,7 @@ exports.getRoomList = function() {
       return rooms.map((room) => {
         return {
           name: room.name,
-          players: room.readsPerSecond*config['CHAT_ROOM_UPDATE_RATE']
+          players: Math.round(room.readsPerSecond*config['CHAT_ROOM_UPDATE_RATE']/1000)
         };
       });
     });

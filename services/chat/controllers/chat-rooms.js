@@ -4,7 +4,7 @@ const roomManager = require('../room-manager');
 const config = require('../config.json');
 
 function getPlayers(room) {
-  return room.readsPerSecond*config['CHAT_ROOM_UPDATE_RATE'];
+  return Math.round(room.readsPerSecond*config['CHAT_ROOM_UPDATE_RATE']/1000);
 }
 
 function getAll(req, res) {
