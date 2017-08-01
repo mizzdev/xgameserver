@@ -19,9 +19,7 @@ exports.expand = function(req, res) {
   }
 
   chatService.createRoom(roomLabel)
-  chatService.getRoomList()
-    .then((roomList) => { res.locals.roomList = roomList; })
-    .then(() => res.render('chat'));
+  res.redirect(req.app.locals.rootPath+'/chat');
 };
 
 exports.shrink = function(req, res) {
@@ -33,7 +31,5 @@ exports.shrink = function(req, res) {
   }
 
   chatService.deleteRoom(roomLabel)
-  chatService.getRoomList()
-    .then((roomList) => { res.locals.roomList = roomList; })
-    .then(() => res.render('chat'));
+  res.redirect(req.app.locals.rootPath+'/chat');
 };
