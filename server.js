@@ -38,3 +38,9 @@ serviceRegistry.addService(require('./services/dashboard'));
 app.use('*', (req, res) => {
   res.status(404).send('Endpoint Not Found');
 });
+app.use(function(err, res, req, next) {
+  logger.error('Unhandled Error');
+  logger.error(err.stack);
+
+  res.status(500).send('Internal Server Error');
+});
