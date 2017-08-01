@@ -38,7 +38,7 @@ serviceRegistry.addService(require('./services/dashboard'));
 app.use('*', (req, res) => {
   res.status(404).send('Endpoint Not Found');
 });
-app.use(function(err, res, req, next) {
+app.use(function(err, req, res, next) {
   logger.error('Unhandled Error');
   logger.error(err.stack);
 
