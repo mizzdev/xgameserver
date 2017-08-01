@@ -45,8 +45,9 @@ class MessageBuffer {
 }
 
 class Room {
-  constructor(name, maxMessages) {
+  constructor(name, label, maxMessages) {
     this.name = name;
+    this.label = label;
     this.msgCounter = 0;
     this.readsCounter = 0;
     this.readsPerSecond = 0;

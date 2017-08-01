@@ -13,14 +13,13 @@ function update() {
   roomList.forEach((room) => room.update());
 }
 
-exports.createRoom = function(roomName) {
-  const similarRoomsCount = roomList.filter((room) => {
-    const idx = room.name.indexOf(roomName);
-    return (idx > -1);
-  }).length;
+exports.createRoom = function(roomLabel) {
+  const similarRoomsCount = roomList
+    .filter((room) => (room.label === roomLabel)).length;
 
   const room = new Room(
-    `${roomName}${similarRoomsCount + 1}`,
+    `${roomLabel}${similarRoomsCount + 1}`,
+    roomLabel,
     config['CHAT_ROOM_CAPACITY']
   );
 
@@ -30,15 +29,27 @@ exports.createRoom = function(roomName) {
   return room;
 };
 
-exports.resolve = function(roomName) {
-  const similarRooms = roomList.filter((room) => {
-    const idx = room.name.indexOf(roomName);
-    return (idx > -1);
-  }).sort((a, b) => (a.readsPerSecond - b.readsPerSecond));
+exports.deleteRoom = function(roomLabel) {
+  const similarRooms = roomList
+    .filter((room) => (room.label === roomLabel));
+  const similarRoomsCount = similarRooms.length;
+
+  if (!similarRoomsCount) {
+    throw new Error('Nothing to delete');
+  }
+
+  roomList.splice(roomList.indexOf(similarRooms[similarRoomsCount - 1]), 1);
+};
+
+
+exports.resolve = function(roomLabel) {
+  const similarRooms = roomList
+    .filter((room) => (room.label === roomLabel))
+    .sort((a, b) => (a.readsPerSecond - b.readsPerSecond));
   const similarRoomsCount = similarRooms.length;
 
   const room = (similarRoomsCount) ?
-    similarRooms[0] : exports.createRoom(roomName);
+    similarRooms[0] : exports.createRoom(roomLabel);
 
   logger.debug(`Resolved room named "${room.name}"`);
   return room;

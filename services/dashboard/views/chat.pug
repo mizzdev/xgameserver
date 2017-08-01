@@ -5,8 +5,23 @@ block content
     h1 #[i.fa.fa-comments] Chat
     p.lead Currently created chat rooms:
   .row
-    each room in rooms
+    each item in roomList
       .col-sm-4
         .alert.alert-success
-          strong.pull-right #[i.fa.fa-male] #{room.players}
-          p= room.name
+          h4= item.label
+          table.table.table-bordered
+            thead
+              th Name
+              th: i.fa.fa-male
+            tbody
+              each room in item.rooms
+                tr
+                  td= room.name
+                  td= room.players
+          form.hidden(name=item.label+'Expand' action=rootPath+'/chat/expand' method='POST')
+            input.hidden(type='text' name='label' value=item.label)
+          form.hidden(name=item.label+'Shrink' action=rootPath+'/chat/shrink' method='POST')
+            input.hidden(type='text' name='label' value=item.label)
+          .btn-group.btn-group-justified
+            a.btn.btn-primary(href='#' onclick='document.'+item.label+'Expand'+'.submit();'): i.fa.fa-plus
+            a.btn.btn-primary(href='#' onclick='document.'+item.label+'Shrink'+'.submit();'): i.fa.fa-minus
