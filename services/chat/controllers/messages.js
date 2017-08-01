@@ -1,7 +1,5 @@
 'use strict';
 
-const roomManager = require('../room-manager');
-
 exports.getList = function(req, res) {
   let last;
 
@@ -11,27 +9,15 @@ exports.getList = function(req, res) {
     last = Number(req.query.last);
   }
 
-  const room = roomManager.getRoom(req.params.roomName);
-
-  if (!room) {
-    return res.status(404).send('Room Not Found');
-  }
-
-  const messageList = room.readMessages(last);
+  const messageList = req.room.readMessages(last);
 
   res.json({
     messages: messageList,
-    last: room.msgCounter - 1
+    last: req.room.msgCounter - 1
   });
 };
 
 exports.send = function(req, res) {
-  const room = roomManager.getRoom(req.params.roomName);
-
-  if (!room) {
-    return res.status(404).send('Room Not Found');
-  }
-
-  room.sendMessage(req.body);
+  req.room.sendMessage(req.body);
   res.json({});
 };
