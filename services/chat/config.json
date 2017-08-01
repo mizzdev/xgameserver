@@ -1,6 +1,8 @@
 {
   "CHAT_LANG_RULES": {
-    "en": "english"
+    "en": "english",
+    "ru": "russian",
+    "uk": "russian"
   },
   "CHAT_LANG_DEFAULT": "english",
   "CHAT_ROOM_CAPACITY": 20,
