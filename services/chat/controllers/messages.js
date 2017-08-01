@@ -20,7 +20,7 @@ exports.getList = function(req, res) {
   const messageList = room.readMessages(last);
 
   res.json({
-    messages: messageList.map((message) => JSON.stringify(message)),
+    messages: messageList,
     last: room.msgCounter - 1
   });
 };
