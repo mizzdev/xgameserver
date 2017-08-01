@@ -24,60 +24,31 @@ exports.create = function(req, res) {
 
           res.json(accountData);
         });
-    })
-    .catch((err) => {
-      logger.error(err.message);
-      logger.error(req.body);
-      res.status(500).send(err.message);
     });
 };
 
 exports.read = function(req, res) {
-  Account.findOne({ id: req.params.id })
-    .then((account) => {
-      if (!account) {
-        return res.status(404).send('Account Not Found');
-      }
-
-      return res.json(account);
-    })
-    .catch((err) => {
-      logger.error(err.message);
-      logger.error(req.body);
-      res.status(500).send(err.message);
-    });
+  res.json(req.account);
 };
 
 exports.update = function(req, res) {
-  Account.findOne({ id: req.params.id })
-    .then((account) => {
-      if (!account) {
-        return res.status(404).send('Account Not Found');
-      }
+  if (req.body.userEmail) {
+    if (req.account.userEmail) {
+      return res.status(400).send('Email Already Assigned');
+    }
 
-      if (req.body.userEmail) {
-        if (account.userEmail) {
-          return res.status(400).send('Email Already Assigned');
-        }
+    if (!req.body.userPassword) {
+      return res.status(400).send('Email Must Be Provided With Password');
+    }
+  }
 
-        if (!req.body.userPassword) {
-          return res.status(400).send('Email Must Be Provided With Password');
-        }
-      }
+  logger.info(`[ID ${req.account.id}]`, 'before update:', req.account);
 
-      logger.info(`[ID ${account.id}]`, 'before update:', account);
+  Object.keys(req.body).forEach((key) => {
+    req.account[key] = req.body[key];
+  });
 
-      Object.keys(req.body).forEach((key) => {
-        account[key] = req.body[key];
-      });
-
-      return account.save()
-        .tap((account) => logger.info(`[ID ${account.id}]`, 'after update:', account))
-        .then((account) => res.json(account));
-    })
-    .catch((err) => {
-      logger.error(err.message);
-      logger.error(req.body);
-      res.status(500).send(err.message);
-    });
+  return req.account.save()
+    .tap((account) => logger.info(`[ID ${account.id}]`, 'after update:', account))
+    .then((account) => res.json(account));
 };

@@ -8,12 +8,14 @@ const accountsController = require('./controllers/accounts');
 const checkAuth = require('./middlewares/checkAuth');
 const checkIdentity = require('./middlewares/checkIdentity');
 const accountFieldWhitelist = require('./middlewares/accountFieldWhitelist');
+const findAccount = require('./middlewares/findAccount');
 
 router.post('/', accountsController.create);
 
 router.use(checkAuth);
-router.get('/:id', checkIdentity, accountsController.read);
-router.put('/:id', checkIdentity, accountFieldWhitelist, accountsController.update);
+router.use('/:id', checkIdentity, findAccount);
+router.get('/:id', accountsController.read);
+router.put('/:id', accountFieldWhitelist, accountsController.update);
 
 exports.name = 'accounts';
 exports.router = router;
