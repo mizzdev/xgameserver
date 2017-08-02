@@ -3,6 +3,10 @@
 const path = require('path');
 const express = require('express');
 const passport = require('passport');
+const mongoose = require('mongoose');
+const session = require('express-session');
+const MongoStore = require('connect-mongo')(session);
+
 const config = require('./config.json');
 
 const app = express();
@@ -19,8 +23,12 @@ app.locals.title = config['DASHBOARD_TITLE'];
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(require('cookie-parser')());
 app.use(require('body-parser').urlencoded({ extended: true }));
-app.use(require('express-session')({
+app.use(session({
   secret: config['DASHBOARD_SESSION_SECRET'],
+  store: new MongoStore({
+    mongooseConnection: mongoose.connection,
+    collection: 'dashboardsessions'
+  }),
   resave: false,
   saveUninitialized: false
 }));

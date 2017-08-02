@@ -1,0 +1,24 @@
+h3 Summary
+.table-responsive
+  table.table.table-bordered.table-condensed
+    tbody
+      tr
+        th ID
+        td= violator.accountId
+      tr
+        th Nickname
+        td= violator.nickname
+      tr
+        th Precedents
+        td= violator.precedents
+h3 Violations
+.table-responsive
+  table.table.table-striped.table-condensed
+    thead
+      th Time
+      th Subject
+    tbody
+      each violation in violator.violations
+        tr
+          td= violation.createdAt
+          td= violation.subject
