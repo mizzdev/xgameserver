@@ -77,7 +77,7 @@ api.verify = function(headers) {
     .then((accountId) => {
       return BanlistRecord.isBanned(accountId)
         .then((banned) => {
-          should(banned).be.false(`Account ID ${accountId} has been banned`);
+          should(banned).be.false('Banned');
           return accountId;
         });
     })
