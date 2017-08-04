@@ -34,6 +34,6 @@ exports.overview = function(req, res) {
 exports.ban = function(req, res) {
   const authService = serviceRegistry.getService('auth');
 
-  authService.ban(req.params.id || req.body.target, 60)
+  authService.ban(req.params.id || req.body.target, Number(req.body.duration) || (31557600 * 100))
     .then(() => res.redirect(req.app.locals.rootPath+'/auth'));
 };
