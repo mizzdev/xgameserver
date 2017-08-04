@@ -19,12 +19,12 @@ block content
             .alert.alert-warning
               h4 Attention!
               p Do not touch innocents, please.
-            form.form-inline.text-center(action=rootPath+'/accounts/ban' method='POST')
+            form.form.text-center(action=rootPath+'/accounts/ban' method='POST')
               .form-group
                 input.form-control(name='target' placeholder='ID to ban')
               .form-group
                 input.form-control(name='duration' placeholder='Ban duration (s)' value='60')
-              button.btn.btn-danger(type='submit') Proceed
+              button.btn.btn-block.btn-danger(type='submit') Proceed
     .col-sm-8
       .panel.panel-primary
         .panel-heading
