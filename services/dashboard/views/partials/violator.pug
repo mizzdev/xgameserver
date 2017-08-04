@@ -12,13 +12,16 @@ h3 Summary
         th Precedents
         td= violator.precedents
 h3 Violations
-.table-responsive
-  table.table.table-striped.table-condensed
+.table-responsive-custom
+  table.table.table-condensed.table-striped.table-fixed(style='min-width: 400px;')
     thead
-      th Time
-      th Subject
+      tr
+        th.col-xs-6 Time
+        th.col-xs-6 Subject
     tbody
       each violation in violator.violations
         tr
-          td= violation.createdAt
-          td= violation.subject
+          td.col-xs-6= violation.createdAt
+          td.col-xs-6= violation.subject
+  form.hidden(name='banViolator' action=rootPath+'/accounts/'+violator.accountId+'/ban' method='POST')
+  form.hidden(name='forgiveViolator' action=rootPath+'/accounts/violators/'+violator.accountId+'/forgive' method='POST')

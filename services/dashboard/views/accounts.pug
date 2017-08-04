@@ -14,15 +14,15 @@ block content
         .panel-heading
           .panel-title Dangerous Toolkit
         .panel-body
-          button.btn.btn-primary.btn-block(data-toggle='collapse' data-target='#banhammer') Banhammer
+          button.btn.btn-primary.btn-block(data-toggle='collapse' data-target='#banhammer') #[i.fa.fa-gavel] Banhammer
           #banhammer.collapse
             .alert.alert-warning
               h4 Attention!
               p Do not touch innocents, please.
-            .form-inline.text-center
+            form.form-inline.text-center(action=rootPath+'/accounts/ban' method='POST')
               .form-group
                 input.form-control(name='target' placeholder='ID to ban')
-              button.btn.btn-danger Proceed
+              button.btn.btn-danger(type='submit') Proceed
     .col-sm-8
       .panel.panel-primary
         .panel-heading
@@ -50,5 +50,5 @@ block content
           #violator-details-content
           h3 Actions
           .btn-group.btn-group-justified
-            a.btn.btn-success(href='#') Forgive
-            a.btn.btn-danger(href='#') Ban
+            a.btn.btn-success(href='#' onclick='document.'+'forgiveViolator'+'.submit();') Forgive
+            a.btn.btn-danger(href='#' onclick='document.'+'banViolator'+'.submit();') Ban

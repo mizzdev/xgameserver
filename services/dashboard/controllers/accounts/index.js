@@ -31,10 +31,9 @@ exports.overview = function(req, res) {
     .then(() => res.render('accounts'));
 };
 
-exports.getViolator = function(req, res) {
-  const accountsService = serviceRegistry.getService('accounts');
-  const accountId = req.params.id;
+exports.ban = function(req, res) {
+  const authService = serviceRegistry.getService('auth');
 
-  accountsService.getViolator(accountId)
-    .then();
+  authService.ban(req.params.id || req.body.target, 60)
+    .then(() => res.redirect(req.app.locals.rootPath+'/auth'));
 };

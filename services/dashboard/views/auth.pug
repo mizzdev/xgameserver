@@ -1,0 +1,25 @@
+extends ./layout
+
+block content
+  .page-header
+    h1 #[i.fa.fa-lock] Auth
+  .row
+    .panel.panel-primary
+      .panel-heading
+        .panel-title Banlist
+      .panel-body
+        table.table.table-striped.table-condensed
+          thead
+            th Banned at
+            th Expires in
+            th Account ID
+            th Actions
+          tbody
+            each record in banlist
+              tr
+                td= record.updatedAt
+                td= record.expiry
+                td= record.id
+                td
+                  form.hidden(name='forgive' action=rootPath+'/auth/'+record.id+'/unban' method='POST')
+                  a.text-success(href='#' onclick='document.'+'forgive'+'.submit();') Forgive

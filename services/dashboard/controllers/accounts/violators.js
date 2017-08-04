@@ -41,3 +41,10 @@ exports.read = function(req, res) {
       res.render('partials/violator');
     });
 };
+
+exports.forgive = function(req, res) {
+  const accountsService = serviceRegistry.getService('accounts');
+
+  accountsService.forgiveViolator(req.params.id)
+    .then(() => res.redirect(req.app.locals.rootPath+'/accounts'));
+};

@@ -5,3 +5,31 @@ body {
 #service-list .btn {
   margin-bottom: 30px;
 }
+
+.table-responsive-custom {
+  max-width: 768px;
+  overflow-x: auto;
+}
+
+.table-fixed {
+  width: 100%;
+}
+
+.table-fixed tbody {
+  height: 200px;
+  overflow-y: auto;
+  width: 100%;
+}
+
+.table-fixed thead, .table-fixed tbody, .table-fixed tr, .table-fixed td, .table-fixed th {
+  display: block;
+}
+
+.table-fixed tbody td {
+  float: left;
+  background: inherit;
+}
+
+.table-fixed thead tr th {
+  float: left;
+}

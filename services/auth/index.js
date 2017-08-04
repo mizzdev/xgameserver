@@ -5,9 +5,11 @@ const Promise = require('bluebird');
 const should = require('should/as-function');
 const log4js = require('log4js');
 
+const AuthNonce = require('./models/auth-nonce');
+const BanlistRecord = require('./models/banlist-record');
+
 const env = require('../../env');
 const config = require('./config.json');
-const AuthNonce = require('./models/auth-nonce');
 
 const logger = log4js.getLogger('auth');
 
@@ -72,6 +74,13 @@ api.verify = function(headers) {
         .then(() => checkSignature(authData.payload, authData.signature))
         .then(() => Number(authData.payload.id));
     })
+    .then((accountId) => {
+      return BanlistRecord.isBanned(accountId)
+        .then((banned) => {
+          should(banned).be.false(`Account ID ${accountId} has been banned`);
+          return accountId;
+        });
+    })
     .catch((err) => {
       logger.error(err.message);
       throw err;
@@ -86,6 +95,22 @@ api.getKeyById = function(accountId) {
       hash.update(`${accountId}{config["APP_SECRET"]}`);
       return new Buffer(hash.digest('hex')).toString('base64');
     });
+};
+
+api.getBanlist = function() {
+  return BanlistRecord.find();
+};
+
+api.ban = function(accountId, durationSeconds) {
+  return BanlistRecord.ban(accountId, durationSeconds);
+};
+
+api.unban = function(accountId) {
+  return BanlistRecord.unban(accountId);
+};
+
+api.isBanned = function(accountId) {
+  return BanlistRecord.isBanned(accountId);
 };
 
 exports.name = 'auth';

@@ -35,5 +35,6 @@ router.get('/', (req, res) => {
 router.use('/profile', require('./profile'));
 router.use('/accounts', require('./accounts'));
 router.use('/chat', require('./chat'));
+router.use('/auth', require('./auth'));
 
 module.exports = router;

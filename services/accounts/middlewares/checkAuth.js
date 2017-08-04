@@ -10,5 +10,5 @@ module.exports = function(req, res, next) {
       req.accountId = id;
       next();
     })
-    .catch(() => res.status(403).send('Authorization Required'));
+    .catch((err) => res.status(403).send(`Authorization Failed: ${err.message}`));
 };
