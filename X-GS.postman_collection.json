@@ -12,7 +12,121 @@
 			"description": "",
 			"item": [
 				{
-					"name": "Register a new player",
+					"name": "Device Tokens (iOS)",
+					"description": "",
+					"item": [
+						{
+							"name": "Get account device token list",
+							"request": {
+								"url": "http://{{xgs_url}}:{{xgs_port}}/accounts/{{xgs_id}}/device-tokens-ios",
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"description": ""
+									},
+									{
+										"key": "Authorization",
+										"value": "XGS {{xgs_auth}}",
+										"description": ""
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"description": ""
+							},
+							"response": []
+						},
+						{
+							"name": "Introduce a new device token to the account",
+							"request": {
+								"url": "http://{{xgs_url}}:{{xgs_port}}/accounts/{{xgs_id}}/device-tokens-ios",
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"description": ""
+									},
+									{
+										"key": "Authorization",
+										"value": "XGS {{xgs_auth}}",
+										"description": ""
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"token\": \"test\"\n}"
+								},
+								"description": ""
+							},
+							"response": []
+						}
+					],
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "Device Tokens (Android)",
+					"description": "",
+					"item": [
+						{
+							"name": "Get account device token list",
+							"request": {
+								"url": "http://{{xgs_url}}:{{xgs_port}}/accounts/{{xgs_id}}/device-tokens-android",
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"description": ""
+									},
+									{
+										"key": "Authorization",
+										"value": "XGS {{xgs_auth}}",
+										"description": ""
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"description": ""
+							},
+							"response": []
+						},
+						{
+							"name": "Introduce a new device token to the account",
+							"request": {
+								"url": "http://{{xgs_url}}:{{xgs_port}}/accounts/{{xgs_id}}/device-tokens-android",
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"description": ""
+									},
+									{
+										"key": "Authorization",
+										"value": "XGS {{xgs_auth}}",
+										"description": ""
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"token\": \"test\"\n}"
+								},
+								"description": ""
+							},
+							"response": []
+						}
+					],
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "Register a new account",
 					"event": [
 						{
 							"listen": "test",
@@ -47,7 +161,7 @@
 					"response": []
 				},
 				{
-					"name": "Get player data by id",
+					"name": "Get account data by id",
 					"request": {
 						"url": "http://{{xgs_url}}:{{xgs_port}}/accounts/{{xgs_id}}",
 						"method": "GET",
@@ -65,14 +179,14 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"nickname\": \"ZALUPA\"\n}"
+							"raw": ""
 						},
 						"description": ""
 					},
 					"response": []
 				},
 				{
-					"name": "Modify player data by id",
+					"name": "Modify account data by id",
 					"request": {
 						"url": "http://{{xgs_url}}:{{xgs_port}}/accounts/{{xgs_id}}",
 						"method": "PUT",
@@ -90,7 +204,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"nickname\": \"foobar\"\n}"
+							"raw": "{\n\t\"nickname\": \"Tester\"\n}"
 						},
 						"description": ""
 					},
@@ -129,6 +243,19 @@
 				},
 				{
 					"name": "Get a chat room according to language",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"var data = JSON.parse(responseBody);",
+									"",
+									"postman.setEnvironmentVariable(\"xgs_chat_room\", Object.keys(data)[0]);"
+								]
+							}
+						}
+					],
 					"request": {
 						"url": {
 							"raw": "http://{{xgs_url}}:{{xgs_port}}/chat?lang={{xgs_lang}}",
@@ -166,6 +293,56 @@
 						"body": {
 							"mode": "raw",
 							"raw": "{\n\t\"nickname\": \"ZALUPA\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Get message list of a chat room",
+					"request": {
+						"url": "http://{{xgs_url}}:{{xgs_port}}/chat/{{xgs_chat_room}}",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							},
+							{
+								"key": "Authorization",
+								"value": "XGS {{xgs_auth}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"nickname\": \"ZALUPA\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Send message to a chat room",
+					"request": {
+						"url": "http://{{xgs_url}}:{{xgs_port}}/chat/{{xgs_chat_room}}",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							},
+							{
+								"key": "Authorization",
+								"value": "XGS {{xgs_auth}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"nickname\": \"http://slash/er\",\n\t\"text\": \"HELLOWORLDBBB\"\n}"
 						},
 						"description": ""
 					},
