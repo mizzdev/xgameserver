@@ -58,3 +58,6 @@ typings/
 
 # dotenv environment variables file
 .env
+
+# APNS certificates
+services/apns/*.pem

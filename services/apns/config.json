@@ -1,0 +1,5 @@
+{
+  "APNS_PRODUCTION_MODE": false,
+  "APNS_CERT_FILEPATH": "cert.pem",
+  "APNS_KEY_FILEPATH": "key.pem"
+}
