@@ -7,6 +7,10 @@ exports.getCount = function() {
   return Account.count();
 };
 
+exports.getAccountById = function(id) {
+  return Account.findOne({ id });
+};
+
 exports.getViolatorList = function() {
   return Violator.find();
 };
