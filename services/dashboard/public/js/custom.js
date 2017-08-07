@@ -33,7 +33,8 @@
         url: path,
         type: method,
         data: $(this).serialize()
-      }).done(function() {
+      }).done(function(data) {
+        $('#notifications-sender-modal .modal-body').html(data);
         $('#notifications-sender-modal').modal();
       });
     });

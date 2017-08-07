@@ -1,5 +1,6 @@
 'use strict';
 
+const Promise = require('bluebird');
 const moment = require('moment');
 const serviceRegistry = require('../../registry');
 
@@ -39,5 +40,6 @@ exports.send = function(req, res) {
   };
 
   notificationsService.send(notification)
-    .then(() => res.send('OK'));
+    .catch((err) => res.locals.error = err.message)
+    .finally(() => res.render('partials/notification-outcome'));
 };
