@@ -4,7 +4,7 @@ const moment = require('moment');
 const serviceRegistry = require('../../registry');
 
 function formatDate(date) {
-  return moment(date).format('DD.MM.YYYY hh:mm:ss');
+  return moment(date).format('DD.MM.YYYY HH:mm:ss');
 }
 
 exports.overview = function(req, res) {
