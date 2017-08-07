@@ -1,0 +1,17 @@
+h3 ID #{accountId}
+if notifications && notifications.length
+  .table-responsive-custom
+    table.table.table-condensed.table-striped.table-fixed(style='min-width: 584px;')
+      thead
+        tr
+          th.col-xs-4 Time
+          th.col-xs-8 Title
+      tbody
+        each notification in notifications
+          tr
+            td.col-xs-4= notification.createdAt
+            td.col-xs-8
+              a(data-toggle='tooltip' title=notification.content)= notification.title
+else
+  .jumbotron.text-center
+    p.h3 No results found

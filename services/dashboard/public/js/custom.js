@@ -21,5 +21,39 @@
     });
 
     $('.ajax-load').css('cursor', 'pointer');
+
+    $('#notifications-sender-form').submit(function(e) {
+      e.preventDefault();
+
+      var accountId = $(this).find('input[name="accountId"]').val();
+      var path = $(this).attr('action') + '/' + accountId;
+      var method = $(this).attr('method');
+
+      $.ajax({
+        url: path,
+        type: method,
+        data: $(this).serialize()
+      }).done(function() {
+        $('#notifications-sender-modal').modal();
+      });
+    });
+
+    $('#notifications-inbox-form').submit(function(e) {
+      e.preventDefault();
+
+      var accountId = $(this).find('input[name="accountId"]').val();
+      var path = $(this).attr('action') + '/' + accountId;
+      var method = $(this).attr('method');
+
+      $.ajax({
+        url: path,
+        type: method
+      }).done(function(data) {
+        $('#notifications-inbox-table').html(data);
+        $('body').tooltip({
+          selector: '#notifications-inbox-table a[data-toggle="tooltip"]'
+        });
+      });
+    });
   });
 })(window.jQuery);
