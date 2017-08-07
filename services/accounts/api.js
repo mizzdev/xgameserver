@@ -1,12 +1,10 @@
 'use strict';
 
-const Promise = require('bluebird');
 const Account = require('./models/account');
 const Violator = require('./models/violator');
 
 exports.getCount = function() {
-  return Promise.resolve()
-    .then(() => Account.count());
+  return Account.count();
 };
 
 exports.getViolatorList = function() {
