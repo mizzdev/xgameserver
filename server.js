@@ -35,6 +35,7 @@ serviceRegistry.addService(require('./services/accounts'));
 serviceRegistry.addService(require('./services/chat'));
 serviceRegistry.addService(require('./services/notifications'));
 serviceRegistry.addService(require('./services/dashboard'));
+serviceRegistry.addService(require('./services/apns'));
 
 app.use('*', (req, res) => {
   res.status(404).send('Endpoint Not Found');
