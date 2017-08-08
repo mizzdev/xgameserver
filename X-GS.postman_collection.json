@@ -349,6 +349,37 @@
 					"response": []
 				}
 			]
+		},
+		{
+			"name": "Notifications",
+			"description": "",
+			"item": [
+				{
+					"name": "Get account inbox",
+					"request": {
+						"url": "http://{{xgs_url}}:{{xgs_port}}/notifications/{{xgs_id}}",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							},
+							{
+								"key": "Authorization",
+								"value": "XGS {{xgs_auth}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
 		}
 	]
 }
