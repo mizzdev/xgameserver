@@ -28,7 +28,7 @@ exports.overview = function(req, res) {
       return violator;
     }))
     .then((violators) => { res.locals.violators = violators; })
-    .then(() => res.render('accounts'));
+    .then(() => res.render('accounts/index'));
 };
 
 exports.ban = function(req, res) {

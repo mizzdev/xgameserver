@@ -9,7 +9,7 @@ function formatDate(date) {
 }
 
 exports.overview = function(req, res) {
-  res.render('notifications');
+  res.render('notifications/index');
 };
 
 exports.getInbox = function(req, res) {
@@ -27,7 +27,7 @@ exports.getInbox = function(req, res) {
       res.locals.accountId = req.params.accountId;
       res.locals.notifications = notifications;
     })
-    .then(() => res.render('partials/inbox'));
+    .then(() => res.render('notifications/inbox'));
 };
 
 exports.send = function(req, res) {
@@ -42,5 +42,5 @@ exports.send = function(req, res) {
   notificationsService.send(notification)
     .then((result) => res.locals.result = result)
     .catch((err) => res.locals.error = err.message)
-    .finally(() => res.render('partials/notification-outcome'));
+    .finally(() => res.render('notifications/sender'));
 };

@@ -38,7 +38,7 @@ exports.read = function(req, res) {
       }
 
       res.locals.violator = violator;
-      res.render('partials/violator');
+      res.render('accounts/violator');
     });
 };
 
