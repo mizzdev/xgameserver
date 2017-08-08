@@ -6,31 +6,54 @@ const Notification = require('./models/notification');
 
 const serviceRegistry = require('../registry.js');
 
+function sendPushNotificationIOS(account, message) {
+  const apnsService = serviceRegistry.getService('apns');
+
+  return Promise.resolve()
+    .then(() => {
+      should(account.deviceTokensIOS.length)
+        .be.greaterThan(0, 'No devices assigned');
+    })
+    .then(() => {
+      return Promise.map(account.deviceTokensIOS, (deviceToken) => {
+        return apnsService.send(deviceToken, message);
+      });
+    });
+}
+
 exports.getInbox = function(accountId) {
   return Notification.find({ accountId });
 };
 
 exports.send = function(data) {
+  const result = [];
+
   return Promise.resolve()
-    .then(() => {
-      const notification = new Notification(data);
-      return notification.save();
-    })
     .then(() => {
       const accountsService = serviceRegistry.getService('accounts');
       return accountsService.getAccountById(data.accountId);
     })
     .then((account) => {
       should.exist(account, 'Recipient account missing');
-      return account;
-    })
-    .tap((account) => {
-      const apnsService = serviceRegistry.getService('apns');
 
-      return Promise.map(account.deviceTokensIOS, (deviceToken) => {
-        return apnsService.send(deviceToken, data.title);
-      }).catch(() => {
-        throw new Error('APNS Delivery Failed');
-      });
-    });
+      const notification = new Notification(data);
+      return notification.save()
+        .then(() => result.push({ type: 'Inbox' }))
+        .return(account);
+    })
+    .then((account) => {
+      const pushNotificationQueries = [];
+
+      pushNotificationQueries.push(
+        sendPushNotificationIOS(account, data.title)
+          .then(() => result.push({ type: 'iOS Push Notification' }))
+          .catch((err) => result.push({
+            type: 'iOS Push Notification',
+            error: err.message
+          }))
+      );
+
+      return Promise.all(pushNotificationQueries);
+    })
+    .return(result);
 };
