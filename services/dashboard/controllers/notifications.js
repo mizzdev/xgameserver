@@ -40,6 +40,7 @@ exports.send = function(req, res) {
   };
 
   notificationsService.send(notification)
+    .then((result) => res.locals.result = result)
     .catch((err) => res.locals.error = err.message)
     .finally(() => res.render('partials/notification-outcome'));
 };

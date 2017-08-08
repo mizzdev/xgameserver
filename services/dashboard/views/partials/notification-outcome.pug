@@ -1,4 +1,8 @@
 if error
   p.text-danger= error
-else
-  p We have successfully put the notification into the recipient's mailbox. You are free to check it by searching for its inbox.
+if result
+  each delivery in result
+    if delivery.error
+      p #{delivery.type}: #[span.text-danger(style='word-wrap: break-word;')= delivery.error]
+    else
+      p #{delivery.type}: #[span.text-success OK]
