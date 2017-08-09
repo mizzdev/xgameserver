@@ -6,7 +6,7 @@
   "license": "UNLICENSED",
   "author": "Alexander Rozhok <mizzdev@gmail.com>",
   "dependencies": {
-    "apn": "^2.1.5",
+    "apn": "https://github.com/f5f6/node-apn.git#ses",
     "bluebird": "^3.5.0",
     "body-parser": "^1.17.2",
     "connect-ensure-login": "^0.1.1",
