@@ -10,7 +10,7 @@ const config = require('./config.json');
 
 const logger = log4js.getLogger('apns');
 
-let apnProvider, bundleId, passphrase;
+let apnProvider, bundleId;
 
 exports.connect =  function() {
   return Promise.resolve()
