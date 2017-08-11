@@ -21,6 +21,21 @@ function sendPushNotificationIOS(account, message) {
     });
 }
 
+function sendPushNotificationAndroid(account, message) {
+  const gcmService = serviceRegistry.getService('gcm');
+
+  return Promise.resolve()
+    .then(() => {
+      should(account.deviceTokensAndroid.length)
+        .be.greaterThan(0, 'No devices assigned');
+    })
+    .then(() => {
+      return Promise.map(account.deviceTokensAndroid, (deviceToken) => {
+        return gcmService.send(deviceToken, message);
+      });
+    });
+}
+
 exports.getInbox = function(accountId) {
   return Notification.find({ accountId });
 };
@@ -49,6 +64,14 @@ exports.send = function(data) {
           .then(() => result.push({ type: 'iOS Push Notification' }))
           .catch((err) => result.push({
             type: 'iOS Push Notification',
+            error: err.message
+          }))
+      );
+      pushNotificationQueries.push(
+        sendPushNotificationAndroid(account, data.title)
+          .then(() => result.push({ type: 'Android Push Notification' }))
+          .catch((err) => result.push({
+            type: 'Android Push Notification',
             error: err.message
           }))
       );
