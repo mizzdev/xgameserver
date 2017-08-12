@@ -7,6 +7,7 @@ const Notification = require('./models/notification');
 const TokenStorage = require('./models/token-storage');
 
 const config = require('./config.json');
+const i18n = require('./i18n');
 const serviceRegistry = require('../registry.js');
 
 function sendInboxNotification(data) {
@@ -61,6 +62,9 @@ exports.send = function(data) {
     })
     .then((tokenStorage) => {
       const notificationQueries = [];
+
+      data.title = i18n(data.title, tokenStorage.lang);
+      data.content = i18n(data.content, tokenStorage.lang);
 
       notificationQueries.push(
         sendInboxNotification(data)
