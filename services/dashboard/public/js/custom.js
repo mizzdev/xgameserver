@@ -39,6 +39,22 @@
       });
     });
 
+    $('#notifications-broadcaster-form').submit(function(e) {
+      e.preventDefault();
+
+      var path = $(this).attr('action');
+      var method = $(this).attr('method');
+
+      $.ajax({
+        url: path,
+        type: method,
+        data: $(this).serialize()
+      }).done(function(data) {
+        $('#notifications-broadcaster-modal .modal-body').html(data);
+        $('#notifications-broadcaster-modal').modal();
+      });
+    });
+
     $('#notifications-inbox-form').submit(function(e) {
       e.preventDefault();
 

@@ -6,7 +6,13 @@ const should = require('should');
 const Notification = require('./models/notification');
 const TokenStorage = require('./models/token-storage');
 
+const config = require('./config.json');
 const serviceRegistry = require('../registry.js');
+
+function sendInboxNotification(data) {
+  const notification = new Notification(data);
+  return notification.save();
+}
 
 function sendPushNotificationIOS(tokenStorage, message) {
   const apnsService = serviceRegistry.getService('apns');
@@ -54,15 +60,17 @@ exports.send = function(data) {
       return tokenStorage;
     })
     .then((tokenStorage) => {
-      const notification = new Notification(data);
-      return notification.save()
-        .then(() => result.push({ type: 'Inbox' }))
-        .return(tokenStorage);
-    })
-    .then((tokenStorage) => {
-      const pushNotificationQueries = [];
+      const notificationQueries = [];
 
-      pushNotificationQueries.push(
+      notificationQueries.push(
+        sendInboxNotification(data)
+          .then(() => result.push({ type: 'Inbox' }))
+          .catch((err) => result.push({
+            type: 'Inbox',
+            error: err.message
+          }))
+      );
+      notificationQueries.push(
         sendPushNotificationIOS(tokenStorage, data.title)
           .then(() => result.push({ type: 'iOS Push Notification' }))
           .catch((err) => result.push({
@@ -70,7 +78,7 @@ exports.send = function(data) {
             error: err.message
           }))
       );
-      pushNotificationQueries.push(
+      notificationQueries.push(
         sendPushNotificationAndroid(tokenStorage, data.title)
           .then(() => result.push({ type: 'Android Push Notification' }))
           .catch((err) => result.push({
@@ -79,7 +87,56 @@ exports.send = function(data) {
           }))
       );
 
-      return Promise.all(pushNotificationQueries);
+      return Promise.all(notificationQueries);
     })
     .return(result);
+};
+
+exports.broadcast = function(data) {
+  let total = 0;
+  const successors = {
+    inbox: 0,
+    android: 0,
+    iOS: 0
+  };
+
+  function inboxJob(data) {
+    return sendInboxNotification(data)
+      .then(() => successors.inbox++)
+      .catch(() => {});
+  }
+  function androidJob(tokenStorage, message) {
+    return sendPushNotificationIOS(tokenStorage, message)
+      .then(() => successors.android++)
+      .catch(() => {});
+  }
+  function iOSJob(tokenStorage, message) {
+    return sendPushNotificationAndroid(tokenStorage, message)
+      .then(() => successors.iOS++)
+      .catch(() => {});
+  }
+
+  return TokenStorage.find()
+    .then((tokenStorages) => {
+      total = tokenStorages.length;
+
+      return Promise.map(tokenStorages, (tokenStorage) => {
+        const notificationQueries = [];
+
+        notificationQueries.push(inboxJob(Object.assign({}, data, { accountId: tokenStorage.accountId })));
+        notificationQueries.push(iOSJob(tokenStorage, data.title));
+        notificationQueries.push(androidJob(tokenStorage, data.title));
+
+        return Promise.all(notificationQueries);
+      }, {
+        concurrency: config['NOTIFICATIONS_BROADCAST_CONCURRENCY']
+      });
+    })
+    .then(() => {
+      return [
+        { type: 'Inbox', successors: successors.inbox, total: total },
+        { type: 'iOS Push Notifications', successors: successors.iOS, total: total },
+        { type: 'Android Push Notifications', successors: successors.android, total: total }
+      ];
+    });
 };

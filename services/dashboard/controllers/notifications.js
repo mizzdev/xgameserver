@@ -44,3 +44,17 @@ exports.send = function(req, res) {
     .catch((err) => res.locals.error = err.message)
     .finally(() => res.render('notifications/sender'));
 };
+
+exports.broadcast = function(req, res) {
+  const notificationsService = serviceRegistry.getService('notifications');
+
+  const notification = {
+    title: req.body.title,
+    content: req.body.content
+  };
+
+  notificationsService.broadcast(notification)
+    .then((result) => res.locals.result = result)
+    .catch((err) => res.locals.error = err.message)
+    .finally(() => res.render('notifications/broadcaster'));
+};

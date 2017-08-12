@@ -18,13 +18,29 @@ block content
               input.form-control(type='text' name='content' placeholder='Content' required)
             .form-group
               button.btn.btn-success.btn-block(type='submit') Send
-          #notifications-sender-modal.modal.fade(tabindex='-1', role='dialog')
-            .modal-dialog(role='document')
-              .modal-content
-                .modal-header
-                  h4.modal-title Notification Sender
-                .modal-body.text-center
-                  p We have successfully put the notification into the recipient's mailbox. You are free to check it by searching for its inbox.
+      .panel.panel-warning
+        .panel-heading
+          .panel-title Notification Broadcaster
+        .panel-body
+          form#notifications-broadcaster-form.form(action=rootPath+'/notifications' method='POST')
+            .form-group
+              input.form-control(type='text' name='title' placeholder='Title' required)
+            .form-group
+              input.form-control(type='text' name='content' placeholder='Content' required)
+            .form-group
+              button.btn.btn-danger.btn-block(type='submit') Publish
+      #notifications-sender-modal.modal.fade(tabindex='-1', role='dialog')
+        .modal-dialog(role='document')
+          .modal-content
+            .modal-header
+              h4.modal-title Notification Sender
+            .modal-body.text-center
+      #notifications-broadcaster-modal.modal.fade(tabindex='-1', role='dialog')
+        .modal-dialog(role='document')
+          .modal-content
+            .modal-header
+              h4.modal-title Notification Broadcaster
+            .modal-body.text-center
     .col-sm-8
       .panel.panel-primary
         .panel-heading

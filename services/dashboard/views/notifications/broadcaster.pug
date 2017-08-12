@@ -1,0 +1,5 @@
+if error
+  p.text-danger= error
+if result
+  each delivery in result
+    p #{delivery.type}: #[span.text-success= delivery.successors] of #{delivery.total} succeeded
