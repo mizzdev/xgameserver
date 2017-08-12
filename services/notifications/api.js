@@ -127,9 +127,15 @@ exports.broadcast = function(data) {
       return Promise.map(tokenStorages, (tokenStorage) => {
         const notificationQueries = [];
 
-        notificationQueries.push(inboxJob(Object.assign({}, data, { accountId: tokenStorage.accountId })));
-        notificationQueries.push(iOSJob(tokenStorage, data.title));
-        notificationQueries.push(androidJob(tokenStorage, data.title));
+        const notification = {
+          accountId: tokenStorage.accountId,
+          title: i18n(data.title, tokenStorage.lang),
+          content: i18n(data.content, tokenStorage.lang)
+        };
+
+        notificationQueries.push(inboxJob(notification));
+        notificationQueries.push(iOSJob(tokenStorage, notification.title));
+        notificationQueries.push(androidJob(tokenStorage, notification.title));
 
         return Promise.all(notificationQueries);
       }, {
