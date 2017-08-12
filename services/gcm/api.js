@@ -32,6 +32,9 @@ exports.send = function(deviceToken, message) {
     }
   })
     .then((res) => {
+      should(res.statusCode).not.be.equal(401, 'Unauthorized');
+      should(res.statusCode).be.equal(200, `Unhandled status code: ${res.statusCode}`);
+
       if (res.body.failure) {
         throw new Error(res.body.results[0].error);
       }
