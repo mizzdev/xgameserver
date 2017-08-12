@@ -1,6 +1,9 @@
 {
   "apps": [{
     "name": "x-gs",
-    "script": "server.js"
+    "script": "server.js",
+    "env_production": {
+      "NODE_ENV": "production"
+    }
   }]
 }
