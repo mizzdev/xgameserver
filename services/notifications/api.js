@@ -2,35 +2,37 @@
 
 const Promise = require('bluebird');
 const should = require('should');
+
 const Notification = require('./models/notification');
+const TokenStorage = require('./models/token-storage');
 
 const serviceRegistry = require('../registry.js');
 
-function sendPushNotificationIOS(account, message) {
+function sendPushNotificationIOS(tokenStorage, message) {
   const apnsService = serviceRegistry.getService('apns');
 
   return Promise.resolve()
     .then(() => {
-      should(account.deviceTokensIOS.length)
+      should(tokenStorage.deviceTokensIOS.length)
         .be.greaterThan(0, 'No devices assigned');
     })
     .then(() => {
-      return Promise.map(account.deviceTokensIOS, (deviceToken) => {
+      return Promise.map(tokenStorage.deviceTokensIOS, (deviceToken) => {
         return apnsService.send(deviceToken, message);
       });
     });
 }
 
-function sendPushNotificationAndroid(account, message) {
+function sendPushNotificationAndroid(tokenStorage, message) {
   const gcmService = serviceRegistry.getService('gcm');
 
   return Promise.resolve()
     .then(() => {
-      should(account.deviceTokensAndroid.length)
+      should(tokenStorage.deviceTokensAndroid.length)
         .be.greaterThan(0, 'No devices assigned');
     })
     .then(() => {
-      return Promise.map(account.deviceTokensAndroid, (deviceToken) => {
+      return Promise.map(tokenStorage.deviceTokensAndroid, (deviceToken) => {
         return gcmService.send(deviceToken, message);
       });
     });
@@ -43,24 +45,25 @@ exports.getInbox = function(accountId) {
 exports.send = function(data) {
   const result = [];
 
-  return Promise.resolve()
-    .then(() => {
-      const accountsService = serviceRegistry.getService('accounts');
-      return accountsService.getAccountById(data.accountId);
-    })
-    .then((account) => {
-      should.exist(account, 'Recipient account missing');
+  return TokenStorage.findOne({ accountId: data.accountId })
+    .then((tokenStorage) => {
+      if (!tokenStorage) {
+        return new TokenStorage({ accountId: data.accountId }).save();
+      }
 
+      return tokenStorage;
+    })
+    .then((tokenStorage) => {
       const notification = new Notification(data);
       return notification.save()
         .then(() => result.push({ type: 'Inbox' }))
-        .return(account);
+        .return(tokenStorage);
     })
-    .then((account) => {
+    .then((tokenStorage) => {
       const pushNotificationQueries = [];
 
       pushNotificationQueries.push(
-        sendPushNotificationIOS(account, data.title)
+        sendPushNotificationIOS(tokenStorage, data.title)
           .then(() => result.push({ type: 'iOS Push Notification' }))
           .catch((err) => result.push({
             type: 'iOS Push Notification',
@@ -68,7 +71,7 @@ exports.send = function(data) {
           }))
       );
       pushNotificationQueries.push(
-        sendPushNotificationAndroid(account, data.title)
+        sendPushNotificationAndroid(tokenStorage, data.title)
           .then(() => result.push({ type: 'Android Push Notification' }))
           .catch((err) => result.push({
             type: 'Android Push Notification',
