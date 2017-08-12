@@ -1,9 +1,6 @@
 {
   "apps": [{
     "name": "x-gs",
-    "script": "server.js",
-    "env_noauth": {
-      "AUTH_IGNORE_SIGNATURE": true
-    }
+    "script": "server.js"
   }]
 }

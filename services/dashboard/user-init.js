@@ -2,7 +2,7 @@
 
 const log4js = require('log4js');
 const DashboardUser = require('./models/dashboard-user');
-const config = require('./config.json');
+const env = require('../../env');
 
 const logger = log4js.getLogger('dashboard');
 
@@ -13,16 +13,15 @@ DashboardUser.count()
     }
 
     const user = new DashboardUser({
-      username: config['DASHBOARD_DEFAULT_USERNAME'],
-      password: config['DASHBOARD_DEFAULT_PASSWORD'],
+      username: env('DASHBOARD_DEFAULT_USERNAME'),
+      password: env('DASHBOARD_DEFAULT_PASSWORD'),
       defaultCredentials: true
     });
 
     return user.save()
-      .then((user) => {
-        logger.info('Created default admin record with credentials:');
-        logger.info('Username:', user.username);
-        logger.info('Password:', user.password);
+      .then(() => {
+        logger.info('Created default admin record with default credentials');
+        logger.info('Look into your environment configuration file for details');
         logger.warn('Please, change the default credentials ASAP!');
       });
   });

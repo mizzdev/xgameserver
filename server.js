@@ -1,11 +1,7 @@
 'use strict';
 
-const express = require('express');
-const bodyParser = require('body-parser');
+
 const log4js = require('log4js');
-const env = require('./env');
-const db = require('./db');
-const serviceRegistry = require('./services/registry');
 
 log4js.configure({
   appenders: {
@@ -19,10 +15,18 @@ log4js.configure({
 });
 
 const logger = log4js.getLogger('X-GS');
-const app = express();
 
 logger.level = 'debug';
 logger.info('---WELCOME!---');
+
+const express = require('express');
+const bodyParser = require('body-parser');
+
+const env = require('./env');
+const db = require('./db');
+const serviceRegistry = require('./services/registry');
+
+const app = express();
 
 app.use(bodyParser.json());
 app.listen(env('PORT'));

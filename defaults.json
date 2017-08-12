@@ -1,4 +1,15 @@
 {
   "PORT": 7777,
-  "MONGO_URL": "mongodb://localhost/x-gs"
+  "MONGO_URL": "mongodb://localhost/x-gs",
+  "AUTH_APP_SECRET": "CHANGE_MEcN3m7LMceGfmaQijtaXsCiTGyNvTCHANGE_ME",
+  "AUTH_SCHEME": "XGS",
+  "AUTH_IGNORE_SIGNATURE": false,
+  "DASHBOARD_SESSION_SECRET": "CHANGE_MEzcGJxfPMtyVTosXDgzxRmr3yoDHkCHANGE_ME",
+  "DASHBOARD_DEFAULT_USERNAME": "cthulhu",
+  "DASHBOARD_DEFAULT_PASSWORD": "nyarlathotep",
+  "DASHBOARD_TITLE": "X-GS Dashboard",
+  "APNS_BUNDLEID": "com.example.xgs",
+  "APNS_PASSPHRASE": "CHANGE_MEsXDgzxRmcGJxfPMtyVTQijtaXsCiTCHANGE_ME",
+  "GCM_KEY": "CHANGE_MEJxfPMtyVTQijtaXsCigzxRmcGJxfPMtyVTQCHANGE_ME",
+  "GCM_TITLE": "X Game"
 }

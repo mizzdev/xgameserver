@@ -9,7 +9,6 @@ const AuthNonce = require('./models/auth-nonce');
 const BanlistRecord = require('./models/banlist-record');
 
 const env = require('../../env');
-const config = require('./config.json');
 
 const logger = log4js.getLogger('auth');
 
@@ -59,7 +58,7 @@ exports.verify = function(headers) {
       const authData = parseAuthHeader(headers.authorization);
       logger.debug(authData);
 
-      should(authData.scheme).be.equal(config['AUTH_SCHEME'], 'Invalid authorization scheme');
+      should(authData.scheme).be.equal(env('AUTH_SCHEME'), 'Invalid authorization scheme');
       should(authData.payload).have.property('id');
       should(authData.payload).have.property('time');
 
@@ -90,7 +89,7 @@ exports.getKeyById = function(accountId) {
     .then(() => {
       const hash = crypto.createHash('sha1');
 
-      hash.update(`${accountId}{config["APP_SECRET"]}`);
+      hash.update(`${accountId}${env('AUTH_APP_SECRET')}`);
       return new Buffer(hash.digest('hex')).toString('base64');
     });
 };

@@ -1,7 +1,3 @@
 {
-  "DASHBOARD_ROOT": "/dashboard",
-  "DASHBOARD_TITLE": "X-GS Dashboard",
-  "DASHBOARD_SESSION_SECRET": "zcGJxfPMtyVTosXDgzxRmr3yoDHk",
-  "DASHBOARD_DEFAULT_USERNAME": "cthulhu",
-  "DASHBOARD_DEFAULT_PASSWORD": "nyarlathotep"
+  "DASHBOARD_ROOT": "/dashboard"
 }

@@ -61,3 +61,6 @@ typings/
 
 # APNS certificates
 services/apns/*.pem
+
+# User-defined configuration files
+/*.conf.json
