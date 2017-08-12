@@ -3,6 +3,5 @@
     "nickname",
     "userEmail",
     "userPassword"
-  ],
-  "ACCOUNT_MAX_DEVICE_TOKENS": 10
+  ]
 }
