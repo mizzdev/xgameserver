@@ -3,8 +3,12 @@
 const moment = require('moment');
 const Notification = require('../models/notification');
 
+const config = require('../config.json');
+
 exports.getInbox = function(req, res) {
   Notification.find({ accountId: req.params.accountId })
+    .limit(config['NOTIFICATIONS_INBOX_LIMIT'])
+    .exec()
     .then((notifications) => notifications.map((notification) => {
       notification = notification.toObject();
 
