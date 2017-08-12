@@ -67,15 +67,7 @@ function getInterpolations(message) {
   const interpParts = message.split('#');
   interpParts.shift();
 
-  return interpParts.map((interp) => {
-    const spaceIdx = interp.indexOf(' ');
-
-    if (spaceIdx === -1) {
-      return interp;
-    }
-
-    return interp.substr(0, spaceIdx);
-  });
+  return interpParts.map((interp) => interp.match('^[a-zA-Z0-9]+'));
 }
 
 module.exports = function parse(message, lang) {
