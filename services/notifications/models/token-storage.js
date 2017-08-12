@@ -21,6 +21,7 @@ function circularizeDeviceTokensAndroid() {
 
 const tokenStorageSchema = new mongoose.Schema({
   accountId: { type: Number, required: true, unique: true },
+  lang: { type: String },
   deviceTokensIOS: {
     type: [{ type: String, minlength: 64, maxlength: 64 }],
     validate: circularizeDeviceTokensIOS

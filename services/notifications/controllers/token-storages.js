@@ -3,6 +3,17 @@
 const log4js = require('log4js');
 const logger = log4js.getLogger('notifications');
 
+exports.setLanguage = function(req, res) {
+  req.tokenStorage.lang = req.body.lang;
+
+  req.tokenStorage.save()
+    .then(() => res.json({}));
+};
+
+exports.getLanguage = function(req, res) {
+  res.json({ lang: req.tokenStorage.lang });
+};
+
 exports.createIOSToken = function(req, res) {
   const token  = req.body.token;
 
