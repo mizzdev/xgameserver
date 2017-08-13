@@ -6,8 +6,8 @@ const router = express.Router();
 const roomsController = require('./controllers/rooms');
 const messagesController = require('./controllers/messages');
 
-const checkAuth = require('./middlewares/checkAuth');
-const findRoom = require('./middlewares/findRoom');
+const checkAuth = require('./middlewares/check-auth');
+const findRoom = require('./middlewares/find-room');
 
 router.use(checkAuth);
 router.get('/', roomsController.getList);

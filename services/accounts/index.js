@@ -5,10 +5,10 @@ const router = express.Router();
 
 const accountsController = require('./controllers/accounts');
 
-const checkAuth = require('./middlewares/checkAuth');
-const checkIdentity = require('./middlewares/checkIdentity');
-const accountFieldWhitelist = require('./middlewares/accountFieldWhitelist');
-const findAccount = require('./middlewares/findAccount');
+const checkAuth = require('./middlewares/check-auth');
+const checkIdentity = require('./middlewares/check-identity');
+const accountFieldWhitelist = require('./middlewares/account-field-whitelist');
+const findAccount = require('./middlewares/find-account');
 
 router.post('/', accountsController.create);
 

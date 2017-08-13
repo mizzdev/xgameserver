@@ -6,8 +6,8 @@ const router = express.Router();
 const notificationsController = require('./controllers/notifications');
 const tokenStoragesController = require('./controllers/token-storages');
 
-const checkAuth = require('./middlewares/checkAuth');
-const checkIdentity = require('./middlewares/checkIdentity');
+const checkAuth = require('./middlewares/check-auth');
+const checkIdentity = require('./middlewares/check-identity');
 const findTokenStorage = require('./middlewares/find-token-storage');
 
 router.use(checkAuth, checkIdentity);
