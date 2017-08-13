@@ -12,19 +12,18 @@ exports.getInbox = function(req, res) {
     .then((notifications) => notifications.map((notification) => {
       notification = notification.toObject();
 
-      delete notification._id;
-      delete notification.__v;
-      delete notification.accountId;
-      delete notification.updatedAt;
-
       const time = moment.utc(notification.createdAt).format('HH:mm');
       const diff = Date.now() - Number(notification.createdAt);
       const daysAgo = Math.floor(diff / 86400000);
 
-      notification.createdAt = {
-        days: daysAgo,
-        time: time
-      };
+      notification.days = daysAgo;
+      notification.time = time;
+
+      delete notification._id;
+      delete notification.__v;
+      delete notification.accountId;
+      delete notification.createdAt;
+      delete notification.updatedAt;
 
       return notification;
     }))
