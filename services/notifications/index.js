@@ -20,9 +20,9 @@ router.get('/:accountId/lang', tokenStoragesController.getLanguage);
 router.post('/:accountId/lang', tokenStoragesController.setLanguage);
 
 router.get('/:accountId/device-tokens-ios', tokenStoragesController.getIOSTokenList);
-router.post('/:accountId/device-tokens-ios', tokenStoragesController.createIOSToken);
+router.post('/:accountId/device-tokens-ios', tokenStoragesController.addIOSToken);
 router.get('/:accountId/device-tokens-android', tokenStoragesController.getAndroidTokenList);
-router.post('/:accountId/device-tokens-android', tokenStoragesController.createAndroidToken);
+router.post('/:accountId/device-tokens-android', tokenStoragesController.addAndroidToken);
 
 exports.name = 'notifications';
 exports.router = router;
