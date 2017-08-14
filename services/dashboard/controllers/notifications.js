@@ -53,6 +53,10 @@ exports.broadcast = function(req, res) {
     content: req.body.content
   };
 
+  if (req.body.lang) {
+    notification.lang = req.body.lang;
+  }
+
   notificationsService.broadcast(notification)
     .then((result) => res.locals.result = result)
     .catch((err) => res.locals.error = err.message)

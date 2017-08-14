@@ -120,7 +120,21 @@ exports.broadcast = function(data) {
       .catch(() => {});
   }
 
-  return TokenStorage.find()
+  const query = {};
+
+  if (data.lang) {
+    query.lang = data.lang;
+  }
+
+  if (data.lang === 'en') {
+    delete query.lang;
+    query.$or = [
+      { lang: 'en' },
+      { lang: { $exists: false } }
+    ];
+  }
+
+  return TokenStorage.find(query)
     .then((tokenStorages) => {
       total = tokenStorages.length;
 
