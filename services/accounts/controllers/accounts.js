@@ -44,11 +44,7 @@ exports.update = function(req, res) {
 
   logger.info(`[ID ${req.account.id}]`, 'before update:', req.account);
 
-  Object.keys(req.body).forEach((key) => {
-    req.account[key] = req.body[key];
-  });
-
-  return req.account.save()
+  return Account.findOneAndUpdate({ _id: req.account._id }, req.body).exec()
     .tap((account) => logger.info(`[ID ${account.id}]`, 'after update:', account))
     .then((account) => res.json(account));
 };
