@@ -44,7 +44,7 @@ exports.update = function(req, res) {
 
   logger.info(`[ID ${req.account.id}]`, 'before update:', req.account);
 
-  return Account.findOneAndUpdate({ _id: req.account._id }, req.body).exec()
+  return Account.findOneAndUpdate({ _id: req.account._id }, req.body, { new: true }).exec()
     .tap((account) => logger.info(`[ID ${account.id}]`, 'after update:', account))
     .then((account) => res.json(account));
 };
