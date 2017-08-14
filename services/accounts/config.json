@@ -1,7 +1,7 @@
 {
-  "ACCOUNT_FIELD_WHITELIST": [
+  "ACCOUNTS_FIELD_WHITELIST": [
     "nickname",
     "userEmail",
     "userPassword"
-  ]
+  ],
 }
