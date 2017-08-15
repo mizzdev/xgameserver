@@ -6,8 +6,6 @@ const serviceRegistry = require('../../registry');
 
 const logger = log4js.getLogger('accounts');
 
-logger.level = 'info';
-
 exports.create = function(req, res) {
   const account = new Account(req.body);
   account.save()

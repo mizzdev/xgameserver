@@ -1,6 +1,11 @@
 'use strict';
 
 const express = require('express');
+const log4js = require('log4js');
+
+const logger = log4js.getLogger('accounts');
+logger.level = 'info';
+
 const router = express.Router();
 
 const accountsController = require('./controllers/accounts');
@@ -22,3 +27,4 @@ router.put('/:id', accountFieldWhitelist, accountsController.update);
 exports.name = 'accounts';
 exports.router = router;
 exports.serviceInterface = require('./api');
+exports.init = function() { require('./item-tables'); };

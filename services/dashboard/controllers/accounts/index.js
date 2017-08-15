@@ -31,6 +31,36 @@ exports.overview = function(req, res) {
     .then(() => res.render('accounts/index'));
 };
 
+exports.addItem = function(req, res) {
+  const accountsService = serviceRegistry.getService('accounts');
+
+  const item = {
+    itemId: Number(req.body.itemId),
+    level: Number(req.body.level),
+    quantity: Number(req.body.quantity)
+  };
+
+  accountsService.addItem(req.body.target, item)
+    .then((result) => res.locals.result = result)
+    .catch((err) => res.locals.error = err.message)
+    .finally(() => res.render('accounts/item-modal'));
+};
+
+exports.removeItem = function(req, res) {
+  const accountsService = serviceRegistry.getService('accounts');
+
+  const item = {
+    itemId: Number(req.body.itemId),
+    level: Number(req.body.level),
+    quantity: Number(req.body.quantity)
+  };
+
+  accountsService.removeItem(req.body.target, item)
+    .then((result) => res.locals.result = result)
+    .catch((err) => res.locals.error = err.message)
+    .finally(() => res.render('accounts/item-modal'));
+};
+
 exports.ban = function(req, res) {
   const authService = serviceRegistry.getService('auth');
 

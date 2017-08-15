@@ -1,0 +1,51 @@
+.panel.panel-danger
+  .panel-heading
+    .panel-title Dangerous Toolkit
+  .panel-body
+    button.btn.btn-primary.btn-block(data-toggle='collapse' data-target='#banhammer' style='margin-bottom: 15px;') #[i.fa.fa-gavel] Banhammer
+    #banhammer.collapse(style='padding-bottom: 15px;')
+      .alert.alert-warning
+        h4 Attention!
+        p Do not touch innocents, please.
+      form.form.text-center(action=rootPath+'/accounts/ban' method='POST')
+        .form-group
+          input.form-control(type='number' name='target' placeholder='ID to ban' required)
+        .form-group
+          input.form-control(type='number' name='duration' placeholder='Ban duration (s)' value='60')
+        button.btn.btn-block.btn-danger(type='submit') Proceed
+    button.btn.btn-primary.btn-block(data-toggle='collapse' data-target='#item-add' style='margin-bottom: 15px;') #[i.fa.fa-arrow-right] Add item to account
+    #item-add.collapse(style='padding-bottom: 15px;')
+      form#item-add-form.form.text-center(action=rootPath+'/accounts/item-add' method='POST')
+        .form-group
+          input.form-control(type='number' name='target' placeholder='Account ID' min='0' required)
+        .form-group
+          input.form-control(type='number' name='itemId' placeholder='Item ID' min='0' required)
+        .form-group
+          input.form-control(type='number' name='level' placeholder='Level' min='1' required)
+        .form-group
+          input.form-control(type='number' name='quantity' placeholder='Quantity' min='1' required)
+        button.btn.btn-block.btn-success(type='submit') Proceed
+      #item-add-modal.modal.fade(tabindex='-1', role='dialog')
+        .modal-dialog(role='document')
+          .modal-content
+            .modal-header
+              h4.modal-title Add item to account
+            .modal-body
+    button.btn.btn-primary.btn-block(data-toggle='collapse' data-target='#item-remove' style='margin-bottom: 15px;') #[i.fa.fa-arrow-left] Remove item from account
+    #item-remove.collapse(style='padding-bottom: 15px;')
+      form#item-remove-form.form.text-center(action=rootPath+'/accounts/item-remove' method='POST')
+        .form-group
+          input.form-control(type='number' name='target' placeholder='Account ID' min='0' required)
+        .form-group
+          input.form-control(type='number' name='itemId' placeholder='Item ID' min='0' required)
+        .form-group
+          input.form-control(type='number' name='level' placeholder='Level' min='1' required)
+        .form-group
+          input.form-control(type='number' name='quantity' placeholder='Quantity' min='1' required)
+        button.btn.btn-block.btn-success(type='submit') Proceed
+      #item-remove-modal.modal.fade(tabindex='-1', role='dialog')
+        .modal-dialog(role='document')
+          .modal-content
+            .modal-header
+              h4.modal-title Remove item from account
+            .modal-body

@@ -3,5 +3,8 @@
     "nickname",
     "userEmail",
     "userPassword"
-  ]
+  ],
+  "ACCOUNTS_STARTING_CAPACITY": 20,
+  "ACCOUNT_SEMAPHORE_TIMEOUT": 10000,
+  "ACCOUNT_SEMAPHORE_CHECK_INTERVAL": 100
 }

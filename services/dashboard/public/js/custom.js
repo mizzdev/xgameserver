@@ -22,6 +22,38 @@
 
     $('.ajax-load').css('cursor', 'pointer');
 
+    $('#item-add-form').submit(function(e) {
+      e.preventDefault();
+
+      var path = $(this).attr('action');
+      var method = $(this).attr('method');
+
+      $.ajax({
+        url: path,
+        type: method,
+        data: $(this).serialize()
+      }).done(function(data) {
+        $('#item-add-modal .modal-body').html(data);
+        $('#item-add-modal').modal();
+      });
+    });
+
+    $('#item-remove-form').submit(function(e) {
+      e.preventDefault();
+
+      var path = $(this).attr('action');
+      var method = $(this).attr('method');
+
+      $.ajax({
+        url: path,
+        type: method,
+        data: $(this).serialize()
+      }).done(function(data) {
+        $('#item-remove-modal .modal-body').html(data);
+        $('#item-remove-modal').modal();
+      });
+    });
+
     $('#notifications-sender-form').submit(function(e) {
       e.preventDefault();
 

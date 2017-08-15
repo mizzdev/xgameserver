@@ -1,0 +1,19 @@
+.panel.panel-primary
+  .panel-heading
+    .panel-title Possible Violators
+  .panel-body.table-responsive
+    table.table.table-striped.table-condensed.table-hover
+      thead
+        th ID
+        th Nickname
+        th Precedents
+        th First
+        th Last
+      tbody
+        each violator in violators
+          tr.ajax-load.reveal(data-ajax-path=rootPath+'/accounts/violators/'+violator.accountId data-ajax-method='GET' data-ajax-target='#violator-details-content' data-ajax-meta=violator.accountId data-reveal-target='#violator-details')
+            td= violator.accountId
+            td= violator.nickname
+            td= violator.precedents
+            td= violator.first
+            td= violator.last
