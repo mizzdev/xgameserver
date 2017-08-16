@@ -13,6 +13,7 @@ const findTokenStorage = require('./middlewares/find-token-storage');
 router.use(checkAuth, checkIdentity);
 
 router.get('/:accountId', notificationsController.getInbox);
+router.post('/:accountId/:notificationId', notificationsController.markAsSeen);
 
 router.use('/:accountId', findTokenStorage);
 

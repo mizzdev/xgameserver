@@ -29,3 +29,14 @@ exports.getInbox = function(req, res) {
     }))
     .then((notifications) => res.json(notifications));
 };
+
+exports.markAsSeen = function(req, res) {
+  Notification.markAsSeen(req.params.notificationId)
+    .then((notification) => {
+      if (!notification) {
+        return res.status(404).send('Notification Not Found');
+      }
+
+      return res.json({});
+    });
+};

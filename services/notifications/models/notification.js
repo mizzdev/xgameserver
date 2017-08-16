@@ -17,4 +17,11 @@ notificationSchema.plugin(autoIncrement.plugin, {
 });
 notificationSchema.plugin(timestamp);
 
+notificationSchema.statics.markAsSeen = function(notificationId) {
+  return this.findOneAndUpdate(
+    { id: notificationId },
+    { $set: { seen: true } },
+    { new: true }).exec();
+};
+
 module.exports = mongoose.model('Notification', notificationSchema);
