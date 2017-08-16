@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 const timestamp = require('mongoose-timestamp');
 const autoIncrement = require('mongoose-auto-increment');
 
-const config = require('../../config.json');
+const env = require('../../../../env');
 
 const semaphorize = require('./semaphorize');
 
@@ -21,7 +21,7 @@ const accountSchema = new mongoose.Schema({
   userEmail: String,
   userPassword: String,
   inventory: [ itemSchema ],
-  capacity: { type: Number, default: config['ACCOUNTS_STARTING_CAPACITY'] },
+  capacity: { type: Number, default: env('ACCOUNTS_STARTING_CAPACITY') },
   _lock: Date, // Semaphore lock timestamp (one needs this to perform certain complex operations atomically)
   _now: Date // Current db timestamp
 });

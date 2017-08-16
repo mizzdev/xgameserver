@@ -1,6 +1,7 @@
 {
   "PORT": 7777,
   "MONGO_URL": "mongodb://localhost/x-gs",
+  "ACCOUNTS_STARTING_CAPACITY": 30,
   "AUTH_APP_SECRET": "CHANGE_MEcN3m7LMceGfmaQijtaXsCiTGyNvTCHANGE_ME",
   "AUTH_SCHEME": "XGS",
   "AUTH_IGNORE_SIGNATURE": false,
