@@ -4,11 +4,20 @@ const mongoose = require('mongoose');
 const timestamp = require('mongoose-timestamp');
 const autoIncrement = require('mongoose-auto-increment');
 
+const itemSchema = require('./item-schema');
+
+const cargoSchema = new mongoose.Schema({
+  gold: { type: Number, min: 0 },
+  gems: { type: Number, min: 0 },
+  items: [itemSchema]
+});
+
 const notificationSchema = new mongoose.Schema({
   accountId: { type: Number, required: true },
   title: { type: String, required: true, maxlength: 200 },
   content: { type: String, required: true },
-  seen: { type: Boolean, default: false }
+  seen: { type: Boolean, default: false },
+  cargo: { type: cargoSchema }
 });
 
 notificationSchema.plugin(autoIncrement.plugin, {

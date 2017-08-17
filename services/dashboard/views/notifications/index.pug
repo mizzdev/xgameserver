@@ -17,6 +17,19 @@ block content
             .form-group
               input.form-control(type='text' name='content' placeholder='Content' required)
             .form-group
+              button.btn.btn-primary.btn-block(data-toggle='collapse' data-target='#notifications-sender-cargo' style='margin-bottom: 15px;' type='button') #[i.fa.fa-folder] Load some cargo
+              #notifications-sender-cargo.collapse(style='padding-bottom: 15px;')
+                .form-group
+                  label Gold
+                  input.form-control(type='number' name='cargo.gold' min='0' value='0')
+                .form-group
+                  label Gems
+                  input.form-control(type='number' name='cargo.gems' min='0' value='0')
+                hr
+                #notifications-sender-items
+                p.text-center: a(href='#').text-success
+                  span #[i.fa.fa-plus] Add new item
+            .form-group
               button.btn.btn-success.btn-block(type='submit') Send
       .panel.panel-warning
         .panel-heading

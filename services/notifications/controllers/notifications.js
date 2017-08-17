@@ -25,6 +25,22 @@ exports.getInbox = function(req, res) {
       delete notification.createdAt;
       delete notification.updatedAt;
 
+      if (notification.cargo) {
+        delete notification.cargo._id;
+
+        notification.cargo.items.forEach((item) => {
+          delete item._id;
+        });
+
+        if (!notification.cargo.items.length) {
+          delete notification.cargo.items;
+        }
+
+        if (!notification.cargo.gold && !notification.cargo.gems && !notification.cargo.items) {
+          delete notification.cargo;
+        }
+      }
+
       return notification;
     }))
     .then((notifications) => res.json(notifications));

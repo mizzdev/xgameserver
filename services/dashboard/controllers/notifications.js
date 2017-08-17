@@ -36,8 +36,27 @@ exports.send = function(req, res) {
   const notification = {
     accountId: req.params.accountId,
     title: req.body.title,
-    content: req.body.content
+    content: req.body.content,
+    cargo: {}
   };
+
+  if (Number(req.body['cargo.gold'])) { notification.cargo.gold = req.body['cargo.gold']; }
+  if (Number(req.body['cargo.gems'])) { notification.cargo.gems = req.body['cargo.gems']; }
+  if (req.body['cargo.items']) {
+    const items = req.body['cargo.items'];
+
+    notification.cargo.items = [];
+
+    while (items.length) {
+      const item = {};
+
+      item.itemId = items.shift();
+      item.level = items.shift();
+      item.quantity = items.shift();
+
+      notification.cargo.items.push(item);
+    }
+  }
 
   notificationsService.send(notification)
     .then((result) => res.locals.result = result)

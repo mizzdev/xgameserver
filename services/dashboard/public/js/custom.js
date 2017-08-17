@@ -71,6 +71,37 @@
       });
     });
 
+    $('#notifications-sender-cargo a').click(function(e) {
+      e.preventDefault();
+
+      var children = $('#notifications-sender-items .well').length;
+
+      var item = '';
+
+      item += '<div class="well">';
+
+      item += '<div class="form-group">';
+      item += '<input type="number" class="form-control" name="cargo.items[' + children +'].itemId" placeholder="Item ID"  min="0" />';
+      item += '</div>';
+      item += '<div class="form-group">';
+      item += '<input type="number" class="form-control" name="cargo.items[' + children +'].level" placeholder="Level" min="0" />';
+      item += '</div>';
+      item += '<div class="form-group">';
+      item += '<input type="number" class="form-control" name="cargo.items[' + children +'].quantity" placeholder="Quantity" min="0" />';
+      item += '</div>';
+      item += '<div class="form-group">';
+      item += '<button type="button" class="notification-item-remove btn btn-block btn-danger"><i class="fa fa-trash"></i> Remove</button>';
+      item += '</div>';
+
+      item += '</div>';
+
+      $('#notifications-sender-items').append(item);
+    });
+
+    $('#notifications-sender-items').on('click', '.notification-item-remove', function(e) {
+      $(e.target).parent().parent().remove();
+    });
+
     $('#notifications-broadcaster-form').submit(function(e) {
       e.preventDefault();
 
