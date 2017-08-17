@@ -65,8 +65,9 @@ services/apns/*.pem
 # Language files
 services/notifications/i18n/lang
 
-# Account item stack table
-services/accounts/item-tables/stack.json
+# User-defined account item tables
+services/accounts/item-tables/*.json
+!services/accounts/item-tables/*.example.json
 
 # User-defined configuration files
 /*.conf.json

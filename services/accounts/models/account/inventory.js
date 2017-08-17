@@ -9,7 +9,7 @@ exports.addItem = function(item) {
   should(item.quantity).be.a.Number();
   should(item.quantity).be.greaterThan(0);
 
-  const stackSize = itemTables.stackSize(item.itemId);
+  const stackSize = itemTables.getProps(item.itemId).stackSize || 1;
 
   const existingItem = this.inventory.find((inventoryItem) => {
     return (
