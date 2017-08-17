@@ -31,7 +31,7 @@ exports.getInbox = function(req, res) {
 };
 
 exports.markAsSeen = function(req, res) {
-  Notification.markAsSeen(req.params.notificationId)
+  Notification.markAsSeen(req.params.accountId, req.params.notificationId)
     .then((notification) => {
       if (!notification) {
         return res.status(404).send('Notification Not Found');

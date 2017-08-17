@@ -17,9 +17,9 @@ notificationSchema.plugin(autoIncrement.plugin, {
 });
 notificationSchema.plugin(timestamp);
 
-notificationSchema.statics.markAsSeen = function(notificationId) {
+notificationSchema.statics.markAsSeen = function(accountId, notificationId) {
   return this.findOneAndUpdate(
-    { id: notificationId },
+    { accountId, id: notificationId },
     { $set: { seen: true } },
     { new: true }).exec();
 };
