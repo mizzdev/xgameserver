@@ -2,6 +2,7 @@
 
 const Promise = require('bluebird');
 const should = require('should');
+const log4js = require('log4js');
 
 const Notification = require('./models/notification');
 const TokenStorage = require('./models/token-storage');
@@ -9,6 +10,8 @@ const TokenStorage = require('./models/token-storage');
 const config = require('./config.json');
 const i18n = require('./i18n');
 const serviceRegistry = require('../registry.js');
+
+const logger = log4js.getLogger('notifications');
 
 function sendInboxNotification(data) {
   const notification = new Notification(data);
@@ -49,6 +52,7 @@ function unpackAtomic(accountId, notificationId) {
   return Notification.lock(notificationId)
     .then((lockSuccess) => {
       if (!lockSuccess) {
+        logger.warn('Notification ID', notificationId, 'is still locked by its semaphore');
         return Promise.delay(config['NOTIFICATIONS_SEMAPHORE_CHECK_INTERVAL'])
           .then(unpackAtomic.bind(null, accountId, notificationId));
       }
@@ -82,6 +86,7 @@ function unpackAtomic(accountId, notificationId) {
             .then((notification) => Notification.remove({ accountId: notification.accountId, id: notification.id }))
             .catch((err) => {
               Notification.unlock(notificationId);
+              logger.error('Failed to unpack notification ID', notificationId, '(' + err.message + ')');
               throw err;
             });
         });
@@ -93,7 +98,9 @@ exports.getInbox = function(accountId) {
 };
 
 exports.unpack = function(accountId, notificationId) {
-  return unpackAtomic(accountId, notificationId);
+  logger.debug('Intending to unpack notification ID', notificationId);
+  return unpackAtomic(accountId, notificationId)
+    .then(() => logger.debug('Unpacked notification ID', notificationId));
 };
 
 exports.send = function(data) {
