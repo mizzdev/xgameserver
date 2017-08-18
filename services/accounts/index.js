@@ -24,6 +24,9 @@ router.use('/:id', checkIdentity, findAccount);
 router.get('/:id', accountsController.read);
 router.put('/:id', accountFieldWhitelist, accountsController.update);
 
+router.post('/:id/equipment', accountsController.equip);
+router.delete('/:id/equipment/:bodyPart', accountsController.unequip);
+
 exports.name = 'accounts';
 exports.router = router;
 exports.serviceInterface = require('./api');

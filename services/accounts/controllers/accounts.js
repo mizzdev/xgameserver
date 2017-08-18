@@ -1,5 +1,6 @@
 'use strict';
 
+const Promise = require('bluebird');
 const log4js = require('log4js');
 const Account = require('../models/account');
 const serviceRegistry = require('../../registry');
@@ -45,4 +46,24 @@ exports.update = function(req, res) {
   return Account.findOneAndUpdate({ _id: req.account._id }, req.body, { new: true }).exec()
     .tap((account) => logger.info(`[ID ${account.id}]`, 'after update:', account))
     .then((account) => res.json(account));
+};
+
+exports.equip = function(req, res) {
+  return Promise.resolve()
+    .then(() => req.account.equip(req.body.idx))
+    .then(() => res.json({}))
+    .catch((err) => {
+      logger.error(`[ID ${req.account.id}]`, 'cannot equip:', err.message);
+      res.status(400).send('Cannot Equip');
+    });
+};
+
+exports.unequip = function(req, res) {
+  return Promise.resolve()
+    .then(() => req.account.unequip(req.params.bodyPart))
+    .then(() => res.json({}))
+    .catch((err) => {
+      logger.error(`[ID ${req.account.id}]`, 'cannot unequip:', err.message);
+      res.status(400).send('Cannot Unequip');
+    });
 };

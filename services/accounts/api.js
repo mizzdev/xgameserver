@@ -1,7 +1,6 @@
 'use strict';
 
-const Promise = require('bluebird')
-const should = require('should');
+const Promise = require('bluebird');
 
 const Account = require('./models/account');
 const Violator = require('./models/violator');

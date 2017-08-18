@@ -91,3 +91,48 @@ exports.removeItems = function(items) {
   items.forEach((item) => removeItem.call(this, item));
   return this.update({ $set: { inventory: this.inventory } });
 };
+
+exports.equip = function(cellIdx) {
+  should(cellIdx).be.a.Number();
+  should(cellIdx).be.lessThan(this.inventory.length);
+
+  const item = this.inventory[cellIdx];
+  const itemType = itemTables.getProps(item.itemId).itemType || 'none';
+  const equipWhitelist = itemTables.getEquipWhitelist();
+
+  should(equipWhitelist).containEql(itemType);
+
+  if (!this.equipment) {
+    this.equipment = {};
+  }
+
+  const equippedItem = this.equipment[itemType];
+
+  if (equippedItem) {
+    this.inventory.push(equippedItem);
+  }
+
+  this.equipment[itemType] = item;
+  this.inventory.splice(cellIdx, 1);
+
+  return this.save();
+};
+
+exports.unequip = function(bodyPart) {
+  should(bodyPart).be.a.String();
+
+  const equipWhitelist = itemTables.getEquipWhitelist();
+
+  should(equipWhitelist).containEql(bodyPart);
+  should.exist(this.equipment);
+
+  const equippedItem = this.equipment[bodyPart];
+  should.exist(equippedItem);
+
+  const update = { $unset: {} };
+  update.$unset['equipment.'+bodyPart] = '';
+
+  update.$push = { inventory: equippedItem };
+
+  return this.update(update);
+};

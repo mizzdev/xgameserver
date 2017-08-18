@@ -11,6 +11,7 @@ const semaphorize = require('./semaphorize');
 
 const balance = require('./balance');
 const inventory = require('./inventory');
+const equipmentSchema = require('./equipment-schema');
 const itemSchema = require('./item-schema');
 
 const accountSchema = new mongoose.Schema({
@@ -22,6 +23,7 @@ const accountSchema = new mongoose.Schema({
   userEmail: String,
   userPassword: String,
   inventory: [ itemSchema ],
+  equipment: { type: equipmentSchema },
   capacity: { type: Number, default: env('ACCOUNTS_STARTING_CAPACITY') },
   _lock: Date, // Semaphore lock timestamp (one needs this to perform certain complex operations atomically)
   _now: Date // Current db timestamp
@@ -50,6 +52,18 @@ accountSchema.set('toJSON', {
       delete item._id;
     });
 
+    if (ret.equipment) {
+      delete ret.equipment._id;
+
+      Object.keys(ret.equipment).forEach((key) => {
+        const value = ret.equipment[key];
+
+        if (value._id) {
+          delete value._id;
+        }
+      });
+    }
+
     return ret;
   }
 });
@@ -59,5 +73,7 @@ accountSchema.statics.incGems = balance.incGems;
 
 accountSchema.methods.addItems = inventory.addItems;
 accountSchema.methods.removeItems = inventory.removeItems;
+accountSchema.methods.equip = inventory.equip;
+accountSchema.methods.unequip = inventory.unequip;
 
 module.exports = mongoose.model('Account', accountSchema);
