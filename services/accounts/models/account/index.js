@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const timestamp = require('mongoose-timestamp');
 const autoIncrement = require('mongoose-auto-increment');
 
+const config = require('../../config.json');
 const env = require('../../../../env');
 
 const semaphorize = require('./semaphorize');
@@ -31,7 +32,7 @@ accountSchema.plugin(autoIncrement.plugin, {
   field: 'id'
 });
 accountSchema.plugin(timestamp);
-accountSchema.plugin(semaphorize);
+accountSchema.plugin(semaphorize, { timeout: config['ACCOUNT_SEMAPHORE_TIMEOUT'] });
 
 accountSchema.set('toJSON', {
   transform: function(doc, ret) {
