@@ -12,7 +12,7 @@ function addItemsAtomic(accountId, items) {
   return Account.lock(accountId)
     .then((lockSuccess) => {
       if (!lockSuccess) {
-        return Promise.delay(config['ACCOUNT_SEMAPHORE_CHECK_INTERVAL'])
+        return Promise.delay(config['ACCOUNTS_SEMAPHORE_CHECK_INTERVAL'])
           .then(addItemsAtomic.bind(null, accountId, items));
       }
 
