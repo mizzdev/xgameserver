@@ -14,6 +14,7 @@ router.use(checkAuth, checkIdentity);
 
 router.get('/:accountId/notifications', notificationsController.getInbox);
 router.post('/:accountId/notifications/:notificationId', notificationsController.markAsSeen);
+router.delete('/:accountId/notifications/:notificationId', notificationsController.unpack);
 
 router.use('/:accountId', findTokenStorage);
 

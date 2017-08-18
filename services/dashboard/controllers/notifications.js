@@ -67,3 +67,12 @@ exports.broadcast = function(req, res) {
     .catch((err) => res.locals.error = err.message)
     .finally(() => res.render('notifications/broadcaster'));
 };
+
+exports.unpack = function(req, res) {
+  const notificationsService = serviceRegistry.getService('notifications');
+
+  notificationsService.unpack(req.params.accountId, req.params.notificationId)
+    .then(() => res.locals.result = 'Notification has ben successfully unpacked')
+    .catch((err) => res.locals.error = err.message)
+    .finally(() => res.render('notifications/unpack'));
+}

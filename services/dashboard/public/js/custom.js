@@ -150,5 +150,22 @@
         });
       });
     });
+
+    $('#notifications-inbox-table').on('click', '.notification-unpack', function(e) {
+      e.preventDefault();
+
+      var path = $(this).attr('href');
+      var method = 'DELETE';
+
+      $.ajax({
+        url: path,
+        type: method
+      }).done(function(data) {
+        $('#notifications-inbox-modal .modal-body').html(data);
+        $('#notifications-inbox-modal').modal();
+
+        $('#notifications-inbox-form').submit();
+      });
+    });
   });
 })(window.jQuery);

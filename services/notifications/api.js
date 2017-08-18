@@ -49,6 +49,37 @@ exports.getInbox = function(accountId) {
   return Notification.find({ accountId });
 };
 
+exports.unpack = function(accountId, notificationId) {
+  const accountsService = serviceRegistry.getService('accounts');
+
+  return Notification.findOne({ accountId, id: notificationId })
+    .then((notification) => {
+      if (!notification) {
+        throw new Error('Notification Not Found');
+      }
+
+      return Promise.resolve(notification)
+        .tap((notification) => {
+          if (!notification.cargo.items.length) {
+            return;
+          }
+
+          return accountsService.addItems(notification.accountId, notification.cargo.items);
+        })
+        .tap((notification) => {
+          if (notification.cargo.gold) {
+            return accountsService.addGold(notification.accountId, notification.cargo.gold);
+          }
+        })
+        .tap((notification) => {
+          if (notification.cargo.gems) {
+            return accountsService.addGems(notification.accountId, notification.cargo.gems);
+          }
+        })
+        .then((notification) => Notification.remove({ accountId: notification.accountId, id: notification.id }));
+    });
+}
+
 exports.send = function(data) {
   const result = [];
 

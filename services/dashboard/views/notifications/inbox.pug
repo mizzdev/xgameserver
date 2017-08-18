@@ -5,13 +5,16 @@ if notifications && notifications.length
       thead
         tr
           th.col-xs-4 Time
-          th.col-xs-8 Title
+          th.col-xs-4.col-sm-6 Title
+          th.col-xs-4.col-sm-2
       tbody
         each notification in notifications
           tr
             td.col-xs-4= notification.createdAt
-            td.col-xs-8
+            td.col-xs-4.col-sm-6
               a(data-toggle='tooltip' title=notification.content)= notification.title
+            td.col-xs-4.col-sm-2
+              a.notification-unpack.text-danger(href=rootPath+'/notifications/'+accountId+'/'+notification.id) Unpack
 else
   .jumbotron.text-center
     p.h3 No results found

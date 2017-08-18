@@ -3,7 +3,9 @@
 const moment = require('moment');
 const Notification = require('../models/notification');
 
+const api = require('../api');
 const config = require('../config.json');
+const serviceRegistry = require('../../registry');
 
 exports.getInbox = function(req, res) {
   Notification.find({ accountId: req.params.accountId })
@@ -56,3 +58,19 @@ exports.markAsSeen = function(req, res) {
       return res.json({});
     });
 };
+
+exports.unpack = function(req, res) {
+  return api.unpack(req.params.accountId, req.params.notificationId)
+    .then(() => res.json({}))
+    .catch((err) => {
+      switch (err.message) {
+      case 'Notification Not Found':
+        res.status(404).send(err.message);
+        break;
+      case 'Not enough space':
+        res.status(400).send('Not Enough Space');
+        break;
+      }
+    });
+};
+

@@ -9,5 +9,6 @@ router.get('/', notificationsController.overview);
 router.post('/', notificationsController.broadcast);
 router.get('/:accountId', notificationsController.getInbox);
 router.post('/:accountId', notificationsController.send);
+router.delete('/:accountId/:notificationId', notificationsController.unpack);
 
 module.exports = router;
