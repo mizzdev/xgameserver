@@ -45,6 +45,10 @@ accountSchema.set('toJSON', {
     if (ret.userEmail) { delete ret.userEmail; }
     if (ret.userPassword) { delete ret.userPassword; }
 
+    ret.inventory.forEach((item) => {
+      delete item._id;
+    });
+
     return ret;
   }
 });
