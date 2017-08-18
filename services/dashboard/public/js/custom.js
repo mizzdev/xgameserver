@@ -61,10 +61,27 @@
       var path = $(this).attr('action') + '/' + accountId;
       var method = $(this).attr('method');
 
+      var items = [];
+      $.each($('#notifications-sender-items').children(), function() {
+        var inputFields = $(this).find('input');
+
+        items.push({
+          itemId: $(inputFields.get(0)).val(),
+          level: $(inputFields.get(1)).val(),
+          quantity: $(inputFields.get(2)).val()
+        });
+      });
+
+      var serializedData = $(this).serialize();
+
+      if (items.length) {
+        serializedData += '&items=' + JSON.stringify(items);
+      }
+
       $.ajax({
         url: path,
         type: method,
-        data: $(this).serialize()
+        data: serializedData
       }).done(function(data) {
         $('#notifications-sender-modal .modal-body').html(data);
         $('#notifications-sender-modal').modal();
@@ -74,20 +91,18 @@
     $('#notifications-sender-cargo a').click(function(e) {
       e.preventDefault();
 
-      var children = $('#notifications-sender-items .well').length;
-
       var item = '';
 
       item += '<div class="well">';
 
       item += '<div class="form-group">';
-      item += '<input type="number" class="form-control" name="cargo.items[' + children +'].itemId" placeholder="Item ID"  min="0" />';
+      item += '<input type="number" class="form-control" placeholder="Item ID"  min="0" required />';
       item += '</div>';
       item += '<div class="form-group">';
-      item += '<input type="number" class="form-control" name="cargo.items[' + children +'].level" placeholder="Level" min="0" />';
+      item += '<input type="number" class="form-control" placeholder="Level" min="1" value="1" required />';
       item += '</div>';
       item += '<div class="form-group">';
-      item += '<input type="number" class="form-control" name="cargo.items[' + children +'].quantity" placeholder="Quantity" min="0" />';
+      item += '<input type="number" class="form-control" placeholder="Quantity" min="1" value="1" required />';
       item += '</div>';
       item += '<div class="form-group">';
       item += '<button type="button" class="notification-item-remove btn btn-block btn-danger"><i class="fa fa-trash"></i> Remove</button>';

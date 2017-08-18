@@ -40,23 +40,9 @@ exports.send = function(req, res) {
     cargo: {}
   };
 
-  if (Number(req.body['cargo.gold'])) { notification.cargo.gold = req.body['cargo.gold']; }
-  if (Number(req.body['cargo.gems'])) { notification.cargo.gems = req.body['cargo.gems']; }
-  if (req.body['cargo.items']) {
-    const items = req.body['cargo.items'];
-
-    notification.cargo.items = [];
-
-    while (items.length) {
-      const item = {};
-
-      item.itemId = items.shift();
-      item.level = items.shift();
-      item.quantity = items.shift();
-
-      notification.cargo.items.push(item);
-    }
-  }
+  if (Number(req.body.gold)) { notification.cargo.gold = req.body.gold; }
+  if (Number(req.body.gems)) { notification.cargo.gems = req.body.gems; }
+  if (req.body.items) { notification.cargo.items = JSON.parse(req.body.items); }
 
   notificationsService.send(notification)
     .then((result) => res.locals.result = result)
