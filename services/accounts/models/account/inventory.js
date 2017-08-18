@@ -3,7 +3,7 @@
 const should = require('should');
 const itemTables = require('../../item-tables');
 
-exports.addItem = function(item) {
+function addItem(item) {
   should(item.itemId).be.a.Number();
   should(item.level).be.a.Number();
   should(item.quantity).be.a.Number();
@@ -39,11 +39,9 @@ exports.addItem = function(item) {
       quantity: appendQuantity
     });
   });
+}
 
-  return this.update({ $set: { inventory: this.inventory } });
-};
-
-exports.removeItem = function(item) {
+function removeItem(item) {
   should(item.itemId).be.a.Number();
   should(item.level).be.a.Number();
   should(item.quantity).be.a.Number();
@@ -78,6 +76,18 @@ exports.removeItem = function(item) {
       return this.inventory.splice(this.inventory.indexOf(inventoryItem), 1);
     }
   });
+}
 
+exports.addItems = function(items) {
+  should(items).be.an.Array();
+
+  items.forEach((item) => addItem.call(this, item));
+  return this.update({ $set: { inventory: this.inventory } });
+};
+
+exports.removeItems = function(items) {
+  should(items).be.an.Array();
+
+  items.forEach((item) => removeItem.call(this, item));
   return this.update({ $set: { inventory: this.inventory } });
 };

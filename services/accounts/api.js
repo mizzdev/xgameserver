@@ -8,31 +8,31 @@ const Violator = require('./models/violator');
 
 const config = require('./config');
 
-function addItemAtomic(accountId, item) {
+function addItemsAtomic(accountId, items) {
   return Account.lock(accountId)
     .then((lockSuccess) => {
       if (!lockSuccess) {
         return Promise.delay(config['ACCOUNT_SEMAPHORE_CHECK_INTERVAL'])
-          .then(addItemAtomic.bind(null, accountId, item));
+          .then(addItemsAtomic.bind(null, accountId, items));
       }
 
       return Account.findOne({ id: accountId }).exec()
-        .then((account) => account.addItem(item))
+        .then((account) => account.addItems(items))
         .then(() => Account.findOne({ id: accountId }).exec())
         .finally(() => Account.unlock(accountId));
     });
 }
 
-function removeItemAtomic(accountId, item) {
+function removeItemsAtomic(accountId, items) {
   return Account.lock(accountId)
     .then((lockSuccess) => {
       if (!lockSuccess) {
         return Promise.delay(config['ACCOUNT_SEMAPHORE_CHECK_INTERVAL'])
-          .then(removeItemAtomic.bind(null, accountId, item));
+          .then(removeItemsAtomic.bind(null, accountId, items));
       }
 
       return Account.findOne({ id: accountId }).exec()
-        .then((account) => account.removeItem(item))
+        .then((account) => account.removeItems(items))
         .then(() => Account.findOne({ id: accountId }).exec())
         .finally(() => Account.unlock(accountId));
     });
@@ -47,11 +47,35 @@ exports.getAccountById = function(id) {
 };
 
 exports.addItem = function(accountId, item) {
-  return addItemAtomic(accountId, item);
+  return addItemsAtomic(accountId, [ item ]);
 };
 
 exports.removeItem = function(accountId, item) {
-  return removeItemAtomic(accountId, item);
+  return removeItemsAtomic(accountId, [ item ]);
+};
+
+exports.addItems = function(accountId, items) {
+  return addItemsAtomic(accountId, items);
+};
+
+exports.removeItems = function(accountId, items) {
+  return removeItemsAtomic(accountId, items);
+};
+
+exports.addGold = function(accountId, amount) {
+  return Account.incGold(accountId, amount);
+};
+
+exports.subGold = function(accountId, amount) {
+  return Account.incGold(accountId, -amount);
+};
+
+exports.addGems = function(accountId, amount) {
+  return Account.incGems(accountId, amount);
+};
+
+exports.subGems = function(accountId, amount) {
+  return Account.incGems(accountId, -amount);
 };
 
 exports.getViolatorList = function() {
@@ -66,6 +90,6 @@ exports.markViolator = function(accountId, subject) {
   return Violator.markById(accountId, subject);
 };
 
-exports.forgiveViolator = function(accountId) {
-  return Violator.forgiveById(accountId);
+exports.foraddViolator = function(accountId) {
+  return Violator.foraddById(accountId);
 };

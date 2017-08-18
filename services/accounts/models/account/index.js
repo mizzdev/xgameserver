@@ -52,7 +52,7 @@ accountSchema.set('toJSON', {
 accountSchema.statics.incGold = balance.incGold;
 accountSchema.statics.incGems = balance.incGems;
 
-accountSchema.methods.addItem = inventory.addItem;
-accountSchema.methods.removeItem = inventory.removeItem;
+accountSchema.methods.addItems = inventory.addItems;
+accountSchema.methods.removeItems = inventory.removeItems;
 
 module.exports = mongoose.model('Account', accountSchema);
