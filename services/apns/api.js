@@ -48,7 +48,7 @@ exports.send = function(deviceToken, message) {
 
       const note = new apn.Notification();
       note.alert = message;
-      note.sound = 'default';
+      note.sound = 'push.caf';
       note.topic = bundleId;
 
       return apnProvider.send(note, deviceToken)
