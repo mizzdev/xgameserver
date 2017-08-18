@@ -75,4 +75,4 @@ exports.unpack = function(req, res) {
     .then(() => res.locals.result = 'Notification has ben successfully unpacked')
     .catch((err) => res.locals.error = err.message)
     .finally(() => res.render('notifications/unpack'));
-}
+};

@@ -3,6 +3,9 @@
 const mongoose = require('mongoose');
 const timestamp = require('mongoose-timestamp');
 const autoIncrement = require('mongoose-auto-increment');
+const semaphorize = require('./semaphorize');
+
+const config = require('../config.json');
 
 const itemSchema = require('./item-schema');
 
@@ -25,6 +28,7 @@ notificationSchema.plugin(autoIncrement.plugin, {
   field: 'id'
 });
 notificationSchema.plugin(timestamp);
+notificationSchema.plugin(semaphorize, { timeout: config['NOTIFICATIONS_SEMAPHORE_TIMEOUT'] });
 
 notificationSchema.statics.markAsSeen = function(accountId, notificationId) {
   return this.findOneAndUpdate(
