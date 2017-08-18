@@ -136,3 +136,56 @@ exports.unequip = function(bodyPart) {
 
   return this.update(update);
 };
+
+exports.equipArtifact = function(cellIdx, artifactCellIdx) {
+  should(cellIdx).be.a.Number();
+  should(cellIdx).be.lessThan(this.inventory.length);
+  should(artifactCellIdx).be.a.Number();
+  should(artifactCellIdx).be.lessThan(this.artifactCellsUnlocked);
+
+  const item = this.inventory[cellIdx];
+  const itemType = itemTables.getProps(item.itemId).itemType || 'none';
+
+  should(itemType).be.equal('artifact');
+
+  if (!this.equipment) {
+    this.equipment = {};
+  }
+
+  if (!this.equipment.artifacts || !this.equipment.artifacts.length) {
+    this.equipment.artifacts = [];
+    for (let i = 0; i < this.artifactCellsUnlocked; i++) {
+      this.equipment.artifacts.push({});
+    }
+  }
+
+  const equippedArtifact = this.equipment.artifacts[artifactCellIdx];
+
+  if (equippedArtifact.quantity) {
+    this.inventory.push(equippedArtifact);
+  }
+
+  this.equipment.artifacts[artifactCellIdx] = item;
+  this.inventory.splice(cellIdx, 1);
+
+  return this.save();
+};
+
+exports.unequipArtifact = function(artifactCellIdx) {
+  should(artifactCellIdx).be.a.Number();
+  should(artifactCellIdx).be.lessThan(this.artifactCellsUnlocked);
+
+  should.exist(this.equipment);
+  should.exist(this.equipment.artifacts);
+  should(artifactCellIdx).be.lessThan(this.equipment.artifacts.length);
+
+  const equippedArtifact = this.equipment.artifacts[artifactCellIdx];
+  should(equippedArtifact).not.be.empty();
+
+  const update = { $set: {} };
+  update.$set['equipment.artifacts.'+artifactCellIdx] = null;
+
+  update.$push = { inventory: equippedArtifact };
+
+  return this.update(update);
+};

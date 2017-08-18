@@ -67,3 +67,23 @@ exports.unequip = function(req, res) {
       res.status(400).send('Cannot Unequip');
     });
 };
+
+exports.equipArtifact = function(req, res) {
+  return Promise.resolve()
+    .then(() => req.account.equipArtifact(req.body.idx, Number(req.params.artifactCellIdx)))
+    .then(() => res.json({}))
+    .catch((err) => {
+      logger.error(`[ID ${req.account.id}]`, 'cannot equip artifact:', err.message);
+      res.status(400).send('Cannot Equip');
+    });
+};
+
+exports.unequipArtifact = function(req, res) {
+  return Promise.resolve()
+    .then(() => req.account.unequipArtifact(Number(req.params.artifactCellIdx)))
+    .then(() => res.json({}))
+    .catch((err) => {
+      logger.error(`[ID ${req.account.id}]`, 'cannot unequip artifact:', err.message);
+      res.status(400).send('Cannot Unequip');
+    });
+};

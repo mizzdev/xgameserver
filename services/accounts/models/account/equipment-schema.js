@@ -9,5 +9,6 @@ module.exports = new mongoose.Schema({
   hat: { type: itemSchema },
   lens: { type: itemSchema },
   skin: { type: itemSchema },
-  shoes: { type: itemSchema }
+  shoes: { type: itemSchema },
+  artifacts: [{}]
 });

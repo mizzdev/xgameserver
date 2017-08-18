@@ -25,6 +25,7 @@ const accountSchema = new mongoose.Schema({
   inventory: [ itemSchema ],
   equipment: { type: equipmentSchema },
   capacity: { type: Number, default: env('ACCOUNTS_STARTING_CAPACITY') },
+  artifactCellsUnlocked: { type: Number, default: 4 },
   _lock: Date, // Semaphore lock timestamp (one needs this to perform certain complex operations atomically)
   _now: Date // Current db timestamp
 });
@@ -62,6 +63,18 @@ accountSchema.set('toJSON', {
           delete value._id;
         }
       });
+
+      if (ret.equipment.artifacts) {
+        ret.equipment.artifacts.forEach((artifact, idx) => {
+          if (!artifact) {
+            ret.equipment.artifacts[idx] = artifact = {};
+          }
+
+          if (artifact._id) {
+            delete artifact._id;
+          }
+        });
+      }
     }
 
     return ret;
@@ -75,5 +88,7 @@ accountSchema.methods.addItems = inventory.addItems;
 accountSchema.methods.removeItems = inventory.removeItems;
 accountSchema.methods.equip = inventory.equip;
 accountSchema.methods.unequip = inventory.unequip;
+accountSchema.methods.equipArtifact = inventory.equipArtifact;
+accountSchema.methods.unequipArtifact = inventory.unequipArtifact;
 
 module.exports = mongoose.model('Account', accountSchema);

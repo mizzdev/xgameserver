@@ -5,7 +5,6 @@ const Notification = require('../models/notification');
 
 const api = require('../api');
 const config = require('../config.json');
-const serviceRegistry = require('../../registry');
 
 exports.getInbox = function(req, res) {
   Notification.find({ accountId: req.params.accountId })
