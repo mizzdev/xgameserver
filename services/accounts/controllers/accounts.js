@@ -59,7 +59,11 @@ function equipAtomic(account, cellIdx) {
       }
 
       return account.equip(cellIdx)
-        .finally(() => Account.unlock(account.id));
+        .then(() => Account.unlock(account.id))
+        .catch((err) => {
+          Account.unlock(account.id);
+          throw err;
+        });
     });
 }
 
@@ -72,7 +76,11 @@ function unequipAtomic(account, bodyPart) {
       }
 
       return account.unequip(bodyPart)
-        .finally(() => Account.unlock(account.id));
+        .then(() => Account.unlock(account.id))
+        .catch((err) => {
+          Account.unlock(account.id);
+          throw err;
+        });
     });
 }
 
@@ -85,7 +93,11 @@ function equipArtifactAtomic(account, cellIdx, artifactCellIdx) {
       }
 
       return account.equipArtifact(cellIdx, artifactCellIdx)
-        .finally(() => Account.unlock(account.id));
+        .then(() => Account.unlock(account.id))
+        .catch((err) => {
+          Account.unlock(account.id);
+          throw err;
+        });
     });
 }
 
@@ -98,7 +110,11 @@ function unequipArtifactAtomic(account, artifactCellIdx) {
       }
 
       return account.unequipArtifact(artifactCellIdx)
-        .finally(() => Account.unlock(account.id));
+        .then(() => Account.unlock(account.id))
+        .catch((err) => {
+          Account.unlock(account.id);
+          throw err;
+        });
     });
 }
 
