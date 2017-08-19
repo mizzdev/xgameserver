@@ -65,15 +65,17 @@ accountSchema.set('toJSON', {
       });
 
       if (ret.equipment.artifacts) {
-        ret.equipment.artifacts.forEach((artifact, idx) => {
-          if (!artifact) {
-            ret.equipment.artifacts[idx] = artifact = {};
-          }
+        const newArtifacts = [];
+        for (let i = 0; i < ret.artifactCellsUnlocked; i++) {
+          newArtifacts.push({});
+        }
 
-          if (artifact._id) {
-            delete artifact._id;
-          }
+        ret.equipment.artifacts.forEach((artifact) => {
+          delete artifact.item._id;
+          newArtifacts[artifact.cellIdx] = artifact.item;
         });
+
+        ret.equipment.artifacts = newArtifacts;
       }
     }
 

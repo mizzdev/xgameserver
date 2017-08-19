@@ -152,20 +152,22 @@ exports.equipArtifact = function(cellIdx, artifactCellIdx) {
     this.equipment = {};
   }
 
-  if (!this.equipment.artifacts || !this.equipment.artifacts.length) {
+  if (!this.equipment.artifacts) {
     this.equipment.artifacts = [];
-    for (let i = 0; i < this.artifactCellsUnlocked; i++) {
-      this.equipment.artifacts.push({});
-    }
   }
 
-  const equippedArtifact = this.equipment.artifacts[artifactCellIdx];
+  const equippedArtifact = this.equipment.artifacts.find((artifact) => (artifact.cellIdx === artifactCellIdx));
 
-  if (equippedArtifact.quantity) {
-    this.inventory.push(equippedArtifact);
+  if (equippedArtifact) {
+    this.inventory.push(equippedArtifact.item);
+    equippedArtifact.item = item;
+  } else {
+    this.equipment.artifacts.push({
+      cellIdx: artifactCellIdx,
+      item: item
+    });
   }
 
-  this.equipment.artifacts[artifactCellIdx] = item;
   this.inventory.splice(cellIdx, 1);
 
   return this.save();
@@ -177,15 +179,12 @@ exports.unequipArtifact = function(artifactCellIdx) {
 
   should.exist(this.equipment);
   should.exist(this.equipment.artifacts);
-  should(artifactCellIdx).be.lessThan(this.equipment.artifacts.length);
 
-  const equippedArtifact = this.equipment.artifacts[artifactCellIdx];
-  should(equippedArtifact).not.be.empty();
+  const equippedArtifact = this.equipment.artifacts.find((artifact) => (artifact.cellIdx === artifactCellIdx));
+  should.exist(equippedArtifact);
 
-  const update = { $set: {} };
-  update.$set['equipment.artifacts.'+artifactCellIdx] = null;
+  this.inventory.push(equippedArtifact.item);
+  this.equipment.artifacts.splice(this.equipment.artifacts.indexOf(equippedArtifact), 1);
 
-  update.$push = { inventory: equippedArtifact };
-
-  return this.update(update);
+  return this.save();
 };
