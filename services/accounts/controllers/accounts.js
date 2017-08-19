@@ -5,6 +5,8 @@ const log4js = require('log4js');
 const Account = require('../models/account');
 const serviceRegistry = require('../../registry');
 
+const config = require('../config.json');
+
 const logger = log4js.getLogger('accounts');
 
 exports.create = function(req, res) {
@@ -48,9 +50,61 @@ exports.update = function(req, res) {
     .then((account) => res.json(account));
 };
 
+function equipAtomic(account, cellIdx) {
+  return Account.lock(account.id)
+    .then((lockSuccess) => {
+      if (!lockSuccess) {
+        return Promise.delay(config['ACCOUNTS_SEMAPHORE_CHECK_INTERVAL'])
+          .then(equipAtomic.bind(null, account, cellIdx));
+      }
+
+      return account.equip(cellIdx)
+        .finally(() => Account.unlock(account.id));
+    });
+}
+
+function unequipAtomic(account, bodyPart) {
+  return Account.lock(account.id)
+    .then((lockSuccess) => {
+      if (!lockSuccess) {
+        return Promise.delay(config['ACCOUNTS_SEMAPHORE_CHECK_INTERVAL'])
+          .then(unequipAtomic.bind(null, account, bodyPart));
+      }
+
+      return account.unequip(bodyPart)
+        .finally(() => Account.unlock(account.id));
+    });
+}
+
+function equipArtifactAtomic(account, cellIdx, artifactCellIdx) {
+  return Account.lock(account.id)
+    .then((lockSuccess) => {
+      if (!lockSuccess) {
+        return Promise.delay(config['ACCOUNTS_SEMAPHORE_CHECK_INTERVAL'])
+          .then(equipArtifactAtomic.bind(null, account, cellIdx, artifactCellIdx));
+      }
+
+      return account.equipArtifact(cellIdx, artifactCellIdx)
+        .finally(() => Account.unlock(account.id));
+    });
+}
+
+function unequipArtifactAtomic(account, artifactCellIdx) {
+  return Account.lock(account.id)
+    .then((lockSuccess) => {
+      if (!lockSuccess) {
+        return Promise.delay(config['ACCOUNTS_SEMAPHORE_CHECK_INTERVAL'])
+          .then(unequipArtifactAtomic.bind(null, account, artifactCellIdx));
+      }
+
+      return account.unequipArtifact(artifactCellIdx)
+        .finally(() => Account.unlock(account.id));
+    });
+}
+
 exports.equip = function(req, res) {
   return Promise.resolve()
-    .then(() => req.account.equip(req.body.idx))
+    .then(() => equipAtomic(req.account, req.body.idx))
     .then(() => res.json({}))
     .catch((err) => {
       logger.error(`[ID ${req.account.id}]`, 'cannot equip:', err.message);
@@ -60,7 +114,7 @@ exports.equip = function(req, res) {
 
 exports.unequip = function(req, res) {
   return Promise.resolve()
-    .then(() => req.account.unequip(req.params.bodyPart))
+    .then(() => unequipAtomic(req.account, req.params.bodyPart))
     .then(() => res.json({}))
     .catch((err) => {
       logger.error(`[ID ${req.account.id}]`, 'cannot unequip:', err.message);
@@ -70,7 +124,7 @@ exports.unequip = function(req, res) {
 
 exports.equipArtifact = function(req, res) {
   return Promise.resolve()
-    .then(() => req.account.equipArtifact(req.body.idx, Number(req.params.artifactCellIdx)))
+    .then(() => equipArtifactAtomic(req.account, req.body.idx, Number(req.params.artifactCellIdx)))
     .then(() => res.json({}))
     .catch((err) => {
       logger.error(`[ID ${req.account.id}]`, 'cannot equip artifact:', err.message);
@@ -80,7 +134,7 @@ exports.equipArtifact = function(req, res) {
 
 exports.unequipArtifact = function(req, res) {
   return Promise.resolve()
-    .then(() => req.account.unequipArtifact(Number(req.params.artifactCellIdx)))
+    .then(() => unequipArtifactAtomic(req.account, Number(req.params.artifactCellIdx)))
     .then(() => res.json({}))
     .catch((err) => {
       logger.error(`[ID ${req.account.id}]`, 'cannot unequip artifact:', err.message);
