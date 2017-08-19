@@ -61,8 +61,8 @@ function equipAtomic(account, cellIdx) {
       return account.equip(cellIdx)
         .then(() => Account.unlock(account.id))
         .catch((err) => {
-          Account.unlock(account.id);
-          throw err;
+          return Account.unlock(account.id)
+            .then(() => { throw err; });
         });
     });
 }
@@ -78,8 +78,8 @@ function unequipAtomic(account, bodyPart) {
       return account.unequip(bodyPart)
         .then(() => Account.unlock(account.id))
         .catch((err) => {
-          Account.unlock(account.id);
-          throw err;
+          return Account.unlock(account.id)
+            .then(() => { throw err; });
         });
     });
 }
@@ -95,8 +95,8 @@ function equipArtifactAtomic(account, cellIdx, artifactCellIdx) {
       return account.equipArtifact(cellIdx, artifactCellIdx)
         .then(() => Account.unlock(account.id))
         .catch((err) => {
-          Account.unlock(account.id);
-          throw err;
+          return Account.unlock(account.id)
+            .then(() => { throw err; });
         });
     });
 }
@@ -112,8 +112,8 @@ function unequipArtifactAtomic(account, artifactCellIdx) {
       return account.unequipArtifact(artifactCellIdx)
         .then(() => Account.unlock(account.id))
         .catch((err) => {
-          Account.unlock(account.id);
-          throw err;
+          return Account.unlock(account.id)
+            .then(() => { throw err; });
         });
     });
 }
