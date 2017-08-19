@@ -58,12 +58,9 @@ function equipAtomic(account, cellIdx) {
           .then(equipAtomic.bind(null, account, cellIdx));
       }
 
-      return account.equip(cellIdx)
-        .then(() => Account.unlock(account.id))
-        .catch((err) => {
-          return Account.unlock(account.id)
-            .then(() => { throw err; });
-        });
+      return Promise.resolve()
+        .then(() => account.equip(cellIdx))
+        .finally(() => Account.unlock(account.id));
     });
 }
 
@@ -75,12 +72,9 @@ function unequipAtomic(account, bodyPart) {
           .then(unequipAtomic.bind(null, account, bodyPart));
       }
 
-      return account.unequip(bodyPart)
-        .then(() => Account.unlock(account.id))
-        .catch((err) => {
-          return Account.unlock(account.id)
-            .then(() => { throw err; });
-        });
+      return Promise.resolve()
+        .then(() => account.unequip(bodyPart))
+        .finally(() => Account.unlock(account.id));
     });
 }
 
@@ -92,12 +86,9 @@ function equipArtifactAtomic(account, cellIdx, artifactCellIdx) {
           .then(equipArtifactAtomic.bind(null, account, cellIdx, artifactCellIdx));
       }
 
-      return account.equipArtifact(cellIdx, artifactCellIdx)
-        .then(() => Account.unlock(account.id))
-        .catch((err) => {
-          return Account.unlock(account.id)
-            .then(() => { throw err; });
-        });
+      return Promise.resolve()
+        .then(() => account.equipArtifact(cellIdx, artifactCellIdx))
+        .finally(() => Account.unlock(account.id));
     });
 }
 
@@ -109,12 +100,9 @@ function unequipArtifactAtomic(account, artifactCellIdx) {
           .then(unequipArtifactAtomic.bind(null, account, artifactCellIdx));
       }
 
-      return account.unequipArtifact(artifactCellIdx)
-        .then(() => Account.unlock(account.id))
-        .catch((err) => {
-          return Account.unlock(account.id)
-            .then(() => { throw err; });
-        });
+      return Promise.resolve()
+        .then(() => account.unequipArtifact(artifactCellIdx))
+        .finally(() => Account.unlock(account.id));
     });
 }
 
