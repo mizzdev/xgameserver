@@ -129,12 +129,14 @@ exports.unequip = function(bodyPart) {
   const equippedItem = this.equipment[bodyPart];
   should.exist(equippedItem);
 
+  should(this.inventory.length).lessThan(this.capacity, 'Not enough space');
+
   const update = { $unset: {} };
   update.$unset['equipment.'+bodyPart] = '';
 
   update.$push = { inventory: equippedItem };
 
-  return this.update(update);
+  return this.update(update).exec();
 };
 
 exports.equipArtifact = function(cellIdx, artifactCellIdx) {
@@ -182,6 +184,8 @@ exports.unequipArtifact = function(artifactCellIdx) {
 
   const equippedArtifact = this.equipment.artifacts.find((artifact) => (artifact.cellIdx === artifactCellIdx));
   should.exist(equippedArtifact);
+
+  should(this.inventory.length).lessThan(this.capacity, 'Not enough space');
 
   this.inventory.push(equippedArtifact.item);
   this.equipment.artifacts.splice(this.equipment.artifacts.indexOf(equippedArtifact), 1);
