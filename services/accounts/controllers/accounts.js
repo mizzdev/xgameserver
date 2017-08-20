@@ -60,7 +60,7 @@ exports.equip = function(req, res) {
 
 exports.unequip = function(req, res) {
   return Promise.resolve()
-    .then(() => req.account.semaphorize('unequip', [ req.body.body ]))
+    .then(() => req.account.semaphorize('unequip', [ req.params.bodyPart ]))
     .then(() => res.json({}))
     .catch((err) => {
       logger.error(`[ID ${req.account.id}]`, 'cannot unequip:', err.message);
