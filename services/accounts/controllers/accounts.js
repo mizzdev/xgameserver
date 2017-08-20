@@ -5,8 +5,6 @@ const log4js = require('log4js');
 const Account = require('../models/account');
 const serviceRegistry = require('../../registry');
 
-const config = require('../config.json');
-
 const logger = log4js.getLogger('accounts');
 
 exports.create = function(req, res) {
