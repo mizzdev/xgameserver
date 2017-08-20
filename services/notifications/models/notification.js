@@ -28,7 +28,10 @@ notificationSchema.plugin(autoIncrement.plugin, {
   field: 'id'
 });
 notificationSchema.plugin(timestamp);
-notificationSchema.plugin(semaphorize, { timeout: config['NOTIFICATIONS_SEMAPHORE_TIMEOUT'] });
+notificationSchema.plugin(semaphorize, {
+  timeout: config['NOTIFICATIONS_SEMAPHORE_TIMEOUT'],
+  retryInterval: config['NOTIFICATIONS_SEMAPHORE_CHECK_INTERVAL']
+});
 
 notificationSchema.statics.markAsSeen = function(accountId, notificationId) {
   return this.findOneAndUpdate(

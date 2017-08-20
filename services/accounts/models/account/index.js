@@ -35,7 +35,10 @@ accountSchema.plugin(autoIncrement.plugin, {
   field: 'id'
 });
 accountSchema.plugin(timestamp);
-accountSchema.plugin(semaphorize, { timeout: config['ACCOUNTS_SEMAPHORE_TIMEOUT'] });
+accountSchema.plugin(semaphorize, {
+  timeout: config['ACCOUNTS_SEMAPHORE_TIMEOUT'],
+  retryInterval: config['ACCOUNTS_SEMAPHORE_CHECK_INTERVAL']
+});
 
 accountSchema.set('toJSON', {
   transform: function(doc, ret) {
