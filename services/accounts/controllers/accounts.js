@@ -50,65 +50,9 @@ exports.update = function(req, res) {
     .then((account) => res.json(account));
 };
 
-function equipAtomic(account, cellIdx) {
-  return Account.lock(account.id)
-    .then((lockSuccess) => {
-      if (!lockSuccess) {
-        return Promise.delay(config['ACCOUNTS_SEMAPHORE_CHECK_INTERVAL'])
-          .then(equipAtomic.bind(null, account, cellIdx));
-      }
-
-      return Promise.resolve()
-        .then(() => account.equip(cellIdx))
-        .finally(() => Account.unlock(account.id));
-    });
-}
-
-function unequipAtomic(account, bodyPart) {
-  return Account.lock(account.id)
-    .then((lockSuccess) => {
-      if (!lockSuccess) {
-        return Promise.delay(config['ACCOUNTS_SEMAPHORE_CHECK_INTERVAL'])
-          .then(unequipAtomic.bind(null, account, bodyPart));
-      }
-
-      return Promise.resolve()
-        .then(() => account.unequip(bodyPart))
-        .finally(() => Account.unlock(account.id));
-    });
-}
-
-function equipArtifactAtomic(account, cellIdx, artifactCellIdx) {
-  return Account.lock(account.id)
-    .then((lockSuccess) => {
-      if (!lockSuccess) {
-        return Promise.delay(config['ACCOUNTS_SEMAPHORE_CHECK_INTERVAL'])
-          .then(equipArtifactAtomic.bind(null, account, cellIdx, artifactCellIdx));
-      }
-
-      return Promise.resolve()
-        .then(() => account.equipArtifact(cellIdx, artifactCellIdx))
-        .finally(() => Account.unlock(account.id));
-    });
-}
-
-function unequipArtifactAtomic(account, artifactCellIdx) {
-  return Account.lock(account.id)
-    .then((lockSuccess) => {
-      if (!lockSuccess) {
-        return Promise.delay(config['ACCOUNTS_SEMAPHORE_CHECK_INTERVAL'])
-          .then(unequipArtifactAtomic.bind(null, account, artifactCellIdx));
-      }
-
-      return Promise.resolve()
-        .then(() => account.unequipArtifact(artifactCellIdx))
-        .finally(() => Account.unlock(account.id));
-    });
-}
-
 exports.equip = function(req, res) {
   return Promise.resolve()
-    .then(() => equipAtomic(req.account, req.body.idx))
+    .then(() => req.account.semaphorize('equip', [ req.body.idx ]))
     .then(() => res.json({}))
     .catch((err) => {
       logger.error(`[ID ${req.account.id}]`, 'cannot equip:', err.message);
@@ -118,7 +62,7 @@ exports.equip = function(req, res) {
 
 exports.unequip = function(req, res) {
   return Promise.resolve()
-    .then(() => unequipAtomic(req.account, req.params.bodyPart))
+    .then(() => req.account.semaphorize('unequip', [ req.body.body ]))
     .then(() => res.json({}))
     .catch((err) => {
       logger.error(`[ID ${req.account.id}]`, 'cannot unequip:', err.message);
@@ -128,7 +72,7 @@ exports.unequip = function(req, res) {
 
 exports.equipArtifact = function(req, res) {
   return Promise.resolve()
-    .then(() => equipArtifactAtomic(req.account, req.body.idx, Number(req.params.artifactCellIdx)))
+    .then(() => req.account.semaphorize('equipArtifact', [ req.body.idx, Number(req.params.artifactCellIdx) ]))
     .then(() => res.json({}))
     .catch((err) => {
       logger.error(`[ID ${req.account.id}]`, 'cannot equip artifact:', err.message);
@@ -138,7 +82,7 @@ exports.equipArtifact = function(req, res) {
 
 exports.unequipArtifact = function(req, res) {
   return Promise.resolve()
-    .then(() => unequipArtifactAtomic(req.account, Number(req.params.artifactCellIdx)))
+    .then(() => req.account.semaphorize('unequipArtifact', [ Number(req.params.artifactCellIdx) ]))
     .then(() => res.json({}))
     .catch((err) => {
       logger.error(`[ID ${req.account.id}]`, 'cannot unequip artifact:', err.message);
