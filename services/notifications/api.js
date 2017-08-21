@@ -67,8 +67,8 @@ function unpackAtomic(accountId, notificationId) {
 
           return Promise.resolve(notification)
             .then((notification) => {
-              if (!notification) {
-                return;
+              if (!notification.cargo) {
+                return notification;
               }
 
               return Promise.resolve()
@@ -92,7 +92,8 @@ function unpackAtomic(accountId, notificationId) {
                   }
 
                   return accountsService.addGems(notification.accountId, notification.cargo.gems);
-                });
+                })
+                .return(notification);
             })
             .then((notification) => Notification.remove({ accountId: notification.accountId, id: notification.id }))
             .catch((err) => {
