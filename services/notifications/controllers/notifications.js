@@ -66,7 +66,7 @@ exports.unpack = function(req, res) {
       case 'Notification Not Found':
         res.status(404).send(err.message);
         break;
-      case 'Entity not found':
+      case 'Document not found':
         res.status(404).send('Notification Not Found');
         break;
       case 'Not enough space':
