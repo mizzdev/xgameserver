@@ -1,6 +1,6 @@
 if error
   p.text-danger.text-center= error
-if result
+if result && result.inventory
   p.h3 Resulting inventory of target account:
   .table-responsive
     table.table.table-striped

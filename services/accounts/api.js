@@ -1,41 +1,7 @@
 'use strict';
 
-const Promise = require('bluebird');
-
 const Account = require('./models/account');
 const Violator = require('./models/violator');
-
-const config = require('./config');
-
-function addItemsAtomic(accountId, items) {
-  return Account.lock(accountId)
-    .then((lockSuccess) => {
-      if (!lockSuccess) {
-        return Promise.delay(config['ACCOUNTS_SEMAPHORE_CHECK_INTERVAL'])
-          .then(addItemsAtomic.bind(null, accountId, items));
-      }
-
-      return Account.findOne({ id: accountId }).exec()
-        .then((account) => account.addItems(items))
-        .then(() => Account.findOne({ id: accountId }).exec())
-        .finally(() => Account.unlock(accountId));
-    });
-}
-
-function removeItemsAtomic(accountId, items) {
-  return Account.lock(accountId)
-    .then((lockSuccess) => {
-      if (!lockSuccess) {
-        return Promise.delay(config['ACCOUNT_SEMAPHORE_CHECK_INTERVAL'])
-          .then(removeItemsAtomic.bind(null, accountId, items));
-      }
-
-      return Account.findOne({ id: accountId }).exec()
-        .then((account) => account.removeItems(items))
-        .then(() => Account.findOne({ id: accountId }).exec())
-        .finally(() => Account.unlock(accountId));
-    });
-}
 
 exports.getCount = function() {
   return Account.count();
@@ -46,19 +12,27 @@ exports.getAccountById = function(id) {
 };
 
 exports.addItem = function(accountId, item) {
-  return addItemsAtomic(accountId, [ item ]);
+  return Account.findOne({ id: accountId })
+    .then((account) => account.semaphorize('addItems', [ [ item ] ]))
+    .then(() => Account.findOne({ id: accountId }));
 };
 
 exports.removeItem = function(accountId, item) {
-  return removeItemsAtomic(accountId, [ item ]);
+  return Account.findOne({ id: accountId })
+    .then((account) => account.semaphorize('removeItems', [ [ item ] ]))
+    .then(() => Account.findOne({ id: accountId }));
 };
 
 exports.addItems = function(accountId, items) {
-  return addItemsAtomic(accountId, items);
+  return Account.findOne({ id: accountId })
+    .then((account) => account.semaphorize('addItems', [ items ]))
+    .then(() => Account.findOne({ id: accountId }));
 };
 
 exports.removeItems = function(accountId, items) {
-  return removeItemsAtomic(accountId, items);
+  return Account.findOne({ id: accountId })
+    .then((account) => account.semaphorize('removeItems', [ items ]))
+    .then(() => Account.findOne({ id: accountId }));
 };
 
 exports.addGold = function(accountId, amount) {
