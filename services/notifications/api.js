@@ -66,22 +66,33 @@ function unpackAtomic(accountId, notificationId) {
           }
 
           return Promise.resolve(notification)
-            .tap((notification) => {
-              if (!notification.cargo.items.length) {
+            .then((notification) => {
+              if (!notification) {
                 return;
               }
 
-              return accountsService.addItems(notification.accountId, notification.cargo.items);
-            })
-            .tap((notification) => {
-              if (notification.cargo.gold) {
-                return accountsService.addGold(notification.accountId, notification.cargo.gold);
-              }
-            })
-            .tap((notification) => {
-              if (notification.cargo.gems) {
-                return accountsService.addGems(notification.accountId, notification.cargo.gems);
-              }
+              return Promise.resolve()
+                .then(() => {
+                  if (!(notification.cargo.items && notification.cargo.items.length)) {
+                    return;
+                  }
+
+                  return accountsService.addItems(notification.accountId, notification.cargo.items);
+                })
+                .then(() => {
+                  if (!notification.cargo.gold) {
+                    return;
+                  }
+
+                  return accountsService.addGold(notification.accountId, notification.cargo.gold);
+                })
+                .then(() => {
+                  if (!notification.cargo.gems) {
+                    return;
+                  }
+
+                  return accountsService.addGems(notification.accountId, notification.cargo.gems);
+                });
             })
             .then((notification) => Notification.remove({ accountId: notification.accountId, id: notification.id }))
             .catch((err) => {
