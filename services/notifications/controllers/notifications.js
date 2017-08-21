@@ -73,6 +73,7 @@ exports.unpack = function(req, res) {
         res.status(400).send('Not Enough Space');
         break;
       default:
+        res.status(500).send('Internal Server Error');
         throw err;
       }
     });
