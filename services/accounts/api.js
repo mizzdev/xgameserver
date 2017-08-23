@@ -2,9 +2,22 @@
 
 const Account = require('./models/account');
 const Violator = require('./models/violator');
+const itemTables = require('./item-tables');
 
 exports.getCount = function() {
   return Account.count();
+};
+
+exports.getItemProperties = function(items) {
+  return Promise.resolve()
+    .then(() => {
+      if (typeof items === 'number') {
+        const item = items;
+        return itemTables.getProps(item.itemId);
+      }
+
+      return items.map((item) => itemTables.getProps(item.itemId));
+    });
 };
 
 exports.getAccountById = function(id) {

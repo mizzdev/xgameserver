@@ -23,14 +23,8 @@ orderSchema.plugin(autoIncrement.plugin, {
 orderSchema.plugin(timestamp);
 orderSchema.plugin(random);
 
-orderSchema.statics.sample = function(minLevel, limit) {
+orderSchema.statics.sample = function(query, limit) {
   limit = limit || config['MARKET_MAX_SAMPLED_ORDERS'];
-
-  const query = {};
-
-  if (minLevel) {
-    query.minLevel = minLevel;
-  }
 
   return this.findRandom(query).limit(limit).exec();
 };

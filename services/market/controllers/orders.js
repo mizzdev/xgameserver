@@ -12,7 +12,7 @@ const orderCreationQueue = new PQueue({ concurrency: 1 });
 function orderCreationTask(order, limit) {
   const accountsService = serviceRegistry.getService('accounts');
 
-  return Order.count()
+  return Order.count({ ownerId: order.ownerId })
     .then((count) => {
       if (count < limit) {
         return;
@@ -27,10 +27,15 @@ function orderCreationTask(order, limit) {
 }
 
 exports.getList = function(req, res, next) {
+  const accountsService = serviceRegistry.getService('accounts');
+
   Promise.resolve()
     .then(() => {
       if (typeof req.query.ownerId === 'undefined') {
-        return Order.sample(req.query.level, req.query.limit);
+        return Order.sample({
+          ownerId: { $ne: req.account.id },
+          minLevel: { $lte: req.account.level }
+        }, req.query.limit);
       }
 
       should(isNaN(req.query.ownerId)).be.false();
@@ -38,7 +43,17 @@ exports.getList = function(req, res, next) {
       const ownerId = parseFloat(req.query.ownerId);
       should(ownerId | 0).be.equal(ownerId);
 
-      return Order.find({ ownerId });
+      return Order.find({ ownerId: ownerId });
+    })
+    .then((orders) => {
+      const items = orders.map((order) => order.item);
+
+      return accountsService.getItemProperties(items)
+        .then((properties) => {
+          return orders.filter((order, idx) => {
+            return (req.account.level >= properties[idx].minLevel);
+          });
+        });
     })
     .then((orders) => res.json(orders))
     .catch((err) => {

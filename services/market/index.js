@@ -8,10 +8,10 @@ const ordersController = require('./controllers/orders');
 const checkAuth = require('./middlewares/check-auth');
 const findAccount = require('./middlewares/find-account');
 
-router.use(checkAuth);
+router.use(checkAuth, findAccount);
 
 router.get('/orders', ordersController.getList);
-router.post('/orders', findAccount, ordersController.create);
+router.post('/orders', ordersController.create);
 
 exports.name = 'market';
 exports.router = router;
