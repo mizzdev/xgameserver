@@ -39,7 +39,9 @@ accountSchema.plugin(semaphorize, {
   retryInterval: config['ACCOUNTS_SEMAPHORE_CHECK_INTERVAL']
 });
 
+accountSchema.set('toObject', { virtuals: true });
 accountSchema.set('toJSON', {
+  virtuals: true,
   transform: function(doc, ret) {
     delete ret._id;
     delete ret.__v;
@@ -83,6 +85,15 @@ accountSchema.set('toJSON', {
 
     return ret;
   }
+});
+
+accountSchema.virtual('level').get(function() {
+  return Math.floor(
+    config['ACCOUNT_LEVEL_POLYNOMIAL'][0] +
+    config['ACCOUNT_LEVEL_POLYNOMIAL'][1]*Math.pow(this.exp, 1/2) +
+    config['ACCOUNT_LEVEL_POLYNOMIAL'][2]*Math.pow(this.exp, 1/3) +
+    config['ACCOUNT_LEVEL_POLYNOMIAL'][3]*Math.pow(this.exp, 1/4)
+  );
 });
 
 accountSchema.statics.incGold = balance.incGold;
