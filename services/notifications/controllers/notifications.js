@@ -58,10 +58,13 @@ exports.markAsSeen = function(req, res) {
     });
 };
 
-exports.unpack = function(req, res) {
+exports.unpack = function(req, res, next) {
   return api.unpack(req.params.accountId, req.params.notificationId)
     .then(() => res.json({}))
     .catch((err) => {
+      const capitalize = (str) => str.replace(/\w\S*/g,
+        (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
+
       switch (err.message) {
       case 'Notification Not Found':
         res.status(404).send(err.message);
@@ -70,11 +73,10 @@ exports.unpack = function(req, res) {
         res.status(404).send('Notification Not Found');
         break;
       case 'Not enough space':
-        res.status(400).send('Not Enough Space');
+        res.status(400).send(capitalize(err.message));
         break;
       default:
-        res.status(500).send('Internal Server Error');
-        throw err;
+        return next(err);
       }
     });
 };
