@@ -52,7 +52,7 @@ exports.create = function(req, res, next) {
       case 'AssertionError':
         return res.status(400).send(capitalize(err.message));
       case 'ValidationError':
-        return res.status(400).send(capitalize(err.message));
+        return res.status(400).send('Order Validation Error');
       default:
         return next(err);
       }
