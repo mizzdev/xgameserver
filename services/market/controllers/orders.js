@@ -22,7 +22,7 @@ function orderCreationTask(order, limit) {
     })
     .then(() => accountsService.removeItem(order.ownerId, order.item))
     .then(() => order.save().catch((err) => {
-      accountsService.addItem(order.ownerId, order.item).throw(err);
+      return accountsService.addItem(order.ownerId, order.item).throw(err);
     }));
 }
 
@@ -50,6 +50,8 @@ exports.create = function(req, res, next) {
 
       switch (err.name) {
       case 'AssertionError':
+        return res.status(400).send(capitalize(err.message));
+      case 'ValidationError':
         return res.status(400).send(capitalize(err.message));
       default:
         return next(err);
