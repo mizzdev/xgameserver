@@ -26,11 +26,29 @@ function orderCreationTask(order, limit) {
     }));
 }
 
-exports.sample = function(req, res, next) {
+exports.getList = function(req, res, next) {
   Promise.resolve()
-    .then(() => Order.sample(req.query.level, req.query.limit))
+    .then(() => {
+      if (typeof req.query.ownerId === 'undefined') {
+        return Order.sample(req.query.level, req.query.limit);
+      }
+
+      should(isNaN(req.query.ownerId)).be.false();
+
+      const ownerId = parseFloat(req.query.ownerId);
+      should(ownerId | 0).be.equal(ownerId);
+
+      return Order.find({ ownerId });
+    })
     .then((orders) => res.json(orders))
-    .catch((err) => next(err));
+    .catch((err) => {
+      switch (err.name) {
+      case 'AssertionError':
+        return res.status(400).send('Invalid Query');
+      default:
+        return next(err);
+      }
+    });
 };
 
 exports.create = function(req, res, next) {

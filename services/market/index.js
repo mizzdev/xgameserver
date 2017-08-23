@@ -10,7 +10,7 @@ const findAccount = require('./middlewares/find-account');
 
 router.use(checkAuth);
 
-router.get('/orders', ordersController.sample);
+router.get('/orders', ordersController.getList);
 router.post('/orders', findAccount, ordersController.create);
 
 exports.name = 'market';
