@@ -26,8 +26,7 @@ const accountSchema = new mongoose.Schema({
   equipment: { type: equipmentSchema },
   capacity: { type: Number, default: env('ACCOUNTS_STARTING_CAPACITY') },
   artifactCellsUnlocked: { type: Number, default: 4 },
-  _lock: Date, // Semaphore lock timestamp (one needs this to perform certain complex operations atomically)
-  _now: Date // Current db timestamp
+  orderCellsUnlocked: { type: Number, default: 5 }
 });
 
 accountSchema.plugin(autoIncrement.plugin, {

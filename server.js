@@ -41,6 +41,7 @@ serviceRegistry.addService(require('./services/notifications'));
 serviceRegistry.addService(require('./services/dashboard'));
 serviceRegistry.addService(require('./services/apns'));
 serviceRegistry.addService(require('./services/gcm'));
+serviceRegistry.addService(require('./services/market'));
 
 app.use('*', (req, res) => {
   res.status(404).send('Endpoint Not Found');
