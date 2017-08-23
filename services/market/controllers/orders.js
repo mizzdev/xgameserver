@@ -20,6 +20,10 @@ function orderCreationTask(order, limit) {
 
       should(count).be.lessThan(limit, 'Order limit exceeded');
     })
+    .then(() => {
+      return accountsService.getItemProperties(order.item)
+        .then((properties) => order.minLevel = properties.minLevel);
+    })
     .then(() => accountsService.removeItem(order.ownerId, order.item))
     .then(() => order.save().catch((err) => {
       return accountsService.addItem(order.ownerId, order.item).throw(err);
@@ -27,8 +31,6 @@ function orderCreationTask(order, limit) {
 }
 
 exports.getList = function(req, res, next) {
-  const accountsService = serviceRegistry.getService('accounts');
-
   Promise.resolve()
     .then(() => {
       if (typeof req.query.ownerId === 'undefined') {
@@ -43,17 +45,10 @@ exports.getList = function(req, res, next) {
       const ownerId = parseFloat(req.query.ownerId);
       should(ownerId | 0).be.equal(ownerId);
 
-      return Order.find({ ownerId: ownerId });
-    })
-    .then((orders) => {
-      const items = orders.map((order) => order.item);
-
-      return accountsService.getItemProperties(items)
-        .then((properties) => {
-          return orders.filter((order, idx) => {
-            return (req.account.level >= properties[idx].minLevel);
-          });
-        });
+      return Order.find({
+        ownerId: ownerId,
+        minLevel: { $lte: req.account.level }
+      });
     })
     .then((orders) => res.json(orders))
     .catch((err) => {

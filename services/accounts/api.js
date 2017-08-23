@@ -11,7 +11,7 @@ exports.getCount = function() {
 exports.getItemProperties = function(items) {
   return Promise.resolve()
     .then(() => {
-      if (typeof items === 'number') {
+      if (typeof items === 'object') {
         const item = items;
         return itemTables.getProps(item.itemId);
       }

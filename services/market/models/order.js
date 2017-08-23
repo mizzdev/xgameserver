@@ -14,7 +14,8 @@ const orderSchema = new mongoose.Schema({
   ownerNickname: { type: String, required: true },
   item: { type: itemSchema, required: true },
   cost: { type: Number, required: true, min: 1, max: config['MARKET_MAX_ORDER_COST'] },
-  currency: { type: String, required: true, enum: ['gold', 'gems'] }
+  currency: { type: String, required: true, enum: ['gold', 'gems'] },
+  minLevel: { type: Number, default: 0 }
 });
 orderSchema.plugin(autoIncrement.plugin, {
   model: 'Order',
