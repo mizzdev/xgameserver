@@ -1,5 +1,7 @@
 'use strict';
 
+const should = require('should');
+
 const Account = require('./models/account');
 const Violator = require('./models/violator');
 const itemTables = require('./item-tables');
@@ -53,7 +55,10 @@ exports.addGold = function(accountId, amount) {
 };
 
 exports.subGold = function(accountId, amount) {
-  return Account.incGold(accountId, -amount);
+  return Account.incGold(accountId, -amount)
+    .then((result) => {
+      should(result).be.true('Not Enough Gold');
+    });
 };
 
 exports.addGems = function(accountId, amount) {
@@ -61,7 +66,10 @@ exports.addGems = function(accountId, amount) {
 };
 
 exports.subGems = function(accountId, amount) {
-  return Account.incGems(accountId, -amount);
+  return Account.incGems(accountId, -amount)
+    .then((result) => {
+      should(result).be.true('Not Enough Gems');
+    });
 };
 
 exports.getViolatorList = function() {
