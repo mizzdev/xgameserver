@@ -3,6 +3,7 @@
 const Promise = require('bluebird');
 const PQueue = require('p-queue');
 const should = require('should');
+const moment = require('moment');
 
 const Order = require('../models/order');
 const serviceRegistry = require('../../registry');
@@ -100,7 +101,22 @@ exports.getList = function(req, res, next) {
         minLevel: { $lte: req.account.level }
       });
     })
-    .then((orders) => res.json(orders))
+    .then((orders) => res.json(orders.map((order) => {
+      order = order.toObject();
+
+      order.time = moment.utc(order.createdAt).format('HH:mm:ss');
+
+      delete order._id;
+      delete order.__v;
+      delete order.createdAt;
+      delete order.updatedAt;
+      delete order.random;
+      delete order.minLevel;
+
+      delete order.item._id;
+
+      return order;
+    })))
     .catch((err) => {
       switch (err.name) {
       case 'AssertionError':
