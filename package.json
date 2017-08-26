@@ -5,6 +5,9 @@
   "description": "An HTTP-driven game server for a GM:S game",
   "license": "UNLICENSED",
   "author": "Alexander Rozhok <mizzdev@gmail.com>",
+  "scripts": {
+    "bulk-order-spawner": "node ./scripts/bulk-order-spawner"
+  },
   "dependencies": {
     "apn": "https://github.com/f5f6/node-apn.git#ses",
     "bluebird": "^3.5.0",
@@ -15,6 +18,7 @@
     "express": "^4.15.3",
     "express-session": "^1.15.4",
     "log4js": "^2.3.1",
+    "minimist": "^1.2.0",
     "moment": "^2.18.1",
     "mongoose": "^4.11.4",
     "mongoose-auto-increment": "^5.0.1",
