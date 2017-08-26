@@ -16,6 +16,10 @@ exports.addService = function(service) {
     throw new Error('Provide a router to the registry first');
   }
 
+  if (typeof service === 'function') {
+    service = service(exports);
+  }
+
   const serviceName = service.name;
 
   if (serviceInterfaces[serviceName]) {
