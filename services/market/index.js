@@ -12,6 +12,7 @@ router.use(checkAuth, findAccount);
 
 router.get('/orders', ordersController.getList);
 router.post('/orders', ordersController.create);
+router.delete('/orders/:orderId', ordersController.fulfill);
 
 exports.name = 'market';
 exports.router = router;

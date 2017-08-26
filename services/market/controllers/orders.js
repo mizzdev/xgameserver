@@ -8,6 +8,7 @@ const Order = require('../models/order');
 const serviceRegistry = require('../../registry');
 
 const orderCreationQueue = new PQueue({ concurrency: 1 });
+const orderFulfillmentQueue = new PQueue({ concurrency: 1 });
 
 function orderCreationTask(order, limit) {
   const accountsService = serviceRegistry.getService('accounts');
@@ -28,6 +29,55 @@ function orderCreationTask(order, limit) {
     .then(() => order.save().catch((err) => {
       return accountsService.addItem(order.ownerId, order.item).throw(err);
     }));
+}
+
+function orderFulfillmentTask(orderId, buyer) {
+  const accountsService = serviceRegistry.getService('accounts');
+  const notificationsService = serviceRegistry.getService('notifications');
+
+  let order;
+  let incCurrency = '';
+
+  return Order.findOne({ id: orderId })
+    .then((result) => {
+      order = result;
+
+      if (!order) {
+        return order;
+      }
+
+      switch(order.currency) {
+      case 'gold':
+        incCurrency = 'Gold';
+        break;
+      case 'gems':
+        incCurrency = 'Gems';
+        break;
+      }
+
+      return Promise.resolve()
+        .then(() => accountsService['sub' + incCurrency].call(null, buyer.id, order.cost))
+        .then(() => accountsService.addItem(buyer.id, order.item))
+        .then(() => {
+          const notification = {
+            accountId: order.ownerId,
+            title: `${buyer.nickname} #sold #ITEM_${order.item.itemId}`,
+            content: `#soldBodyStart #ITEM_${order.item.itemId} #soldBodyEnd`,
+            cargo: {}
+          };
+          notification.cargo[order.currency] = order.cost;
+
+          return Order.remove({ id: order.id })
+            .then(() => notificationsService.send(notification))
+            .return(order)
+            .catch((err) => {
+              return Promise.resolve()
+                .then(() => accountsService.removeItem(buyer.id, order.item))
+                .then(() => accountsService['add' + incCurrency].call(null, buyer.id, order.cost))
+                .throw(err);
+            });
+        });
+    });
 }
 
 exports.getList = function(req, res, next) {
@@ -86,3 +136,28 @@ exports.create = function(req, res, next) {
       }
     });
 };
+
+exports.fulfill = function(req, res, next) {
+  orderFulfillmentQueue.add(orderFulfillmentTask.bind(null, req.params.orderId, req.account))
+    .then((order) => {
+      if (!order) {
+        return res.status(404).send('Order Not Found');
+      }
+
+      return res.json({});
+    })
+    .catch((err) => {
+      const capitalize = (str) => str.replace(/\w\S*/g,
+        (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
+
+      switch (err.name) {
+      case 'AssertionError':
+        return res.status(400).send(capitalize(err.message));
+      case 'ValidationError':
+        return res.status(400).send('Order Fulfillment Validation Error');
+      default:
+        return next(err);
+      }
+    });
+};
+
