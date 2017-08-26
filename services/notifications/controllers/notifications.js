@@ -8,6 +8,7 @@ const config = require('../config.json');
 
 exports.getInbox = function(req, res) {
   Notification.find({ accountId: req.params.accountId })
+    .sort({ createdAt: -1 })
     .limit(config['NOTIFICATIONS_INBOX_LIMIT'])
     .exec()
     .then((notifications) => notifications.map((notification) => {
