@@ -1,7 +1,7 @@
 'use strict';
 
-
 const log4js = require('log4js');
+const morgan = require('morgan');
 
 log4js.configure({
   appenders: {
@@ -27,6 +27,10 @@ const db = require('./db');
 const serviceRegistry = require('./services/registry');
 
 const app = express();
+
+if (env('SERVER_LOG_HTTP')) {
+  app.use(morgan('dev'));
+}
 
 app.use(bodyParser.json());
 app.listen(env('PORT'));
