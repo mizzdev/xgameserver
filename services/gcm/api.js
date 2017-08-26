@@ -10,37 +10,43 @@ const env = require('../../env');
 
 const logger = log4js.getLogger('gcm');
 
-exports.send = function(deviceToken, message) {
-  const url = config['GCM_REQUEST_URL'];
-  const key = env('GCM_KEY');
-  const title = env('GCM_TITLE');
+module.exports = function() {
+  const api = {};
 
-  should.exist(key, 'GCM_KEY environment variable is missing');
-  should.exist(title, 'GCM_TITLE environment variable is missing');
+  api.send = function(deviceToken, message) {
+    const url = config['GCM_REQUEST_URL'];
+    const key = env('GCM_KEY');
+    const title = env('GCM_TITLE');
 
-  return Promise.promisify(request)({
-    url: url,
-    method: 'POST',
-    headers: { 'Authorization': `key=${key}` },
-    json: true,
-    body: {
-      data: {
-        ntf_title: title,
-        ntf_message: message
-      },
-      to: deviceToken
-    }
-  })
-    .then((res) => {
-      should(res.statusCode).not.be.equal(401, 'Unauthorized');
-      should(res.statusCode).be.equal(200, `Unhandled status code: ${res.statusCode}`);
+    should.exist(key, 'GCM_KEY environment variable is missing');
+    should.exist(title, 'GCM_TITLE environment variable is missing');
 
-      if (res.body.failure) {
-        throw new Error(res.body.results[0].error);
+    return Promise.promisify(request)({
+      url: url,
+      method: 'POST',
+      headers: { 'Authorization': `key=${key}` },
+      json: true,
+      body: {
+        data: {
+          ntf_title: title,
+          ntf_message: message
+        },
+        to: deviceToken
       }
     })
-    .catch((err) => {
-      logger.error(err.message);
-      throw err;
-    });
+      .then((res) => {
+        should(res.statusCode).not.be.equal(401, 'Unauthorized');
+        should(res.statusCode).be.equal(200, `Unhandled status code: ${res.statusCode}`);
+
+        if (res.body.failure) {
+          throw new Error(res.body.results[0].error);
+        }
+      })
+      .catch((err) => {
+        logger.error(err.message);
+        throw err;
+      });
+  };
+
+  return api;
 };

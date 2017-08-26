@@ -1,4 +1,12 @@
 'use strict';
 
-exports.name = 'gcm';
-exports.serviceInterface = require('./api');
+const api = require('./api');
+
+module.exports = function(serviceRegistry) {
+  const service = {};
+
+  service.name = 'gcm';
+  service.serviceInterface = api(serviceRegistry);
+
+  return service;
+};
