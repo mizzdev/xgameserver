@@ -24,6 +24,8 @@ router.use('/:id', checkIdentity, findAccount);
 router.get('/:id', accountsController.read);
 router.put('/:id', accountFieldWhitelist, accountsController.update);
 
+router.post('/:id/order-cells', accountsController.expandOrderCells);
+
 router.post('/:id/equipment/artifacts/:artifactCellIdx', accountsController.equipArtifact);
 router.delete('/:id/equipment/artifacts/:artifactCellIdx', accountsController.unequipArtifact);
 router.post('/:id/equipment', accountsController.equip);

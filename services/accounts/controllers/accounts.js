@@ -87,3 +87,15 @@ exports.unequipArtifact = function(req, res) {
       res.status(400).send('Cannot Unequip');
     });
 };
+
+exports.expandOrderCells = function(req, res) {
+  return Promise.resolve()
+    .then(() => Account.expandOrderCells(req.account.id))
+    .then((result) => {
+      if (!result) {
+        return res.status(400).send('Cannot Expand Order Cells');
+      }
+
+      return res.json({});
+    });
+};

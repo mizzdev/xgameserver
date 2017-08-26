@@ -98,6 +98,7 @@ accountSchema.virtual('level').get(function() {
 
 accountSchema.statics.incGold = balance.incGold;
 accountSchema.statics.incGems = balance.incGems;
+accountSchema.statics.expandOrderCells = balance.expandOrderCells;
 
 accountSchema.methods.addItems = inventory.addItems;
 accountSchema.methods.removeItems = inventory.removeItems;
