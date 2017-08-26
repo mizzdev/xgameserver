@@ -1,29 +1,37 @@
 'use strict';
 
 const express = require('express');
-const router = express.Router();
 
 const config = require('./config.json');
 const env = require('../../env');
 
+const api = require('./api');
+const controllers = require('./controllers');
+const middlewares = require('./middlewares');
 const orderExpirationProcedure = require('./procedures/order-expiration');
 
-const ordersController = require('./controllers/orders');
+module.exports = function(serviceRegistry) {
+  const router = express.Router();
 
-const checkAuth = require('./middlewares/check-auth');
-const findAccount = require('./middlewares/find-account');
+  const service = {};
 
-router.use(checkAuth, findAccount);
+  service.name = 'market';
+  service.router = router;
+  service.serviceInterface = api(serviceRegistry);
 
-router.get('/orders', ordersController.getList);
-router.post('/orders', ordersController.create);
-router.delete('/orders/:orderId', ordersController.fulfill);
+  const serviceMiddlewares = middlewares(serviceRegistry);
+  const serviceControllers = controllers(service.serviceInterface);
 
-exports.name = 'market';
-exports.router = router;
-exports.serviceInterface = require('./api');
+  const ordersController = serviceControllers.orders;
 
-const checkPeriod = env('MARKET_ORDER_CHECK_PERIOD_MS') || config['MARKET_ORDER_CHECK_PERIOD_MS'];
-exports.init = function() {
-  setInterval(orderExpirationProcedure, checkPeriod);
+  router.use(serviceMiddlewares.checkAuth, serviceMiddlewares.findAccount);
+
+  router.get('/orders', ordersController.getList);
+  router.post('/orders', ordersController.create);
+  router.delete('/orders/:orderId', ordersController.fulfill);
+
+  const checkPeriod = env('MARKET_ORDER_CHECK_PERIOD_MS') || config['MARKET_ORDER_CHECK_PERIOD_MS'];
+  setInterval(orderExpirationProcedure(serviceRegistry), checkPeriod);
+
+  return service;
 };
